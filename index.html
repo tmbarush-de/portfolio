@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Engineer Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080c10; --surface:#0d1117; --surface2:#161b22; --border:#21262d;
+  --accent:#00d4aa; --accent2:#58a6ff; --accent3:#f78166;
+  --text:#e6edf3; --muted:#7d8590; --gold:#d29922;
+  --nb-bg:#0a0e14; --nb-border:#1e2733;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,170,.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,212,170,.03)1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 4rem;background:rgba(8,12,16,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);gap:1rem;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--accent);letter-spacing:.05em;flex-shrink:0;}
+.nav-links{display:flex;gap:2rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;}
+.nav-links a:hover{color:var(--accent);}
+.lang-switcher{display:flex;gap:.3rem;flex-shrink:0;}
+.lang-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:600;padding:.35rem .7rem;border-radius:4px;cursor:pointer;transition:all .2s;}
+.lang-btn:hover{border-color:var(--accent);color:var(--accent);}
+.lang-btn.active{background:var(--accent);border-color:var(--accent);color:var(--bg);}
+
+/* SECTIONS */
+section{position:relative;z-index:1;padding:6rem 4rem;max-width:1200px;margin:0 auto;}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:8rem;max-width:100%;padding-left:8rem;padding-right:8rem;}
+.hero-tag{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;opacity:0;animation:fadeUp .6s .2s forwards;}
+.hero-tag::before{content:'// ';opacity:.5;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,6rem);font-weight:800;line-height:1;margin-bottom:1.5rem;opacity:0;animation:fadeUp .6s .4s forwards;}
+h1 span{color:var(--accent);}
+h1 .dim{color:var(--muted);}
+.hero-desc{font-size:.95rem;color:var(--muted);max-width:560px;line-height:1.8;margin-bottom:2.5rem;opacity:0;animation:fadeUp .6s .6s forwards;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:3rem;opacity:0;animation:fadeUp .6s .8s forwards;}
+.pill{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.35rem .85rem;font-size:.7rem;color:var(--accent2);}
+.hero-cta{display:flex;gap:1rem;opacity:0;animation:fadeUp .6s 1s forwards;}
+.btn{padding:.8rem 2rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;border-radius:4px;}
+.btn-primary{background:var(--accent);color:var(--bg);font-weight:700;}
+.btn-primary:hover{background:#00ffcc;transform:translateY(-2px);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);}
+
+/* PIPELINE VISUAL */
+.pipeline-visual{position:absolute;right:6rem;top:50%;transform:translateY(-50%);opacity:0;animation:fadeIn 1s 1.2s forwards;display:flex;flex-direction:column;}
+.pipe-node{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;width:240px;position:relative;}
+.pipe-node::after{content:'';position:absolute;left:50%;bottom:-18px;width:2px;height:18px;background:linear-gradient(var(--border),var(--accent));}
+.pipe-node:last-child::after{display:none;}
+.pipe-node+.pipe-node{margin-top:18px;}
+.node-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;animation:pulse 2s infinite;}
+.dot-bronze{background:#cd7f32;}.dot-silver{background:#aaa;}.dot-gold{background:var(--gold);}.dot-bi{background:var(--accent2);}
+.node-label{font-size:.72rem;font-weight:600;}
+.node-sub{font-size:.6rem;color:var(--muted);margin-top:2px;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+
+/* COMMON */
+.section-header{margin-bottom:3rem;}
+.section-tag{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem;display:block;}
+.section-tag::before{content:'// ';opacity:.5;}
+h2{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;line-height:1.1;}
+h2 em{color:var(--accent);font-style:normal;}
+.divider{border:none;border-top:1px solid var(--border);max-width:1200px;margin:0 auto;}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2rem;transition:border-color .3s,transform .3s;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.card:hover{border-color:rgba(0,212,170,.3);transform:translateY(-4px);}
+.card:hover::before{transform:scaleX(1);}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+.card-title{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.3rem;}
+.card-subtitle{font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;}
+.card-date{font-size:.65rem;color:var(--muted);white-space:nowrap;background:var(--surface2);padding:.3rem .6rem;border-radius:4px;border:1px solid var(--border);flex-shrink:0;margin-left:1rem;}
+.card-body{font-size:.8rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem;}
+.card-tags{display:flex;flex-wrap:wrap;gap:.5rem;}
+.tag{font-size:.65rem;padding:.25rem .6rem;border-radius:3px;border:1px solid;}
+.tag-green{color:var(--accent);border-color:rgba(0,212,170,.3);background:rgba(0,212,170,.07);}
+.tag-blue{color:var(--accent2);border-color:rgba(88,166,255,.3);background:rgba(88,166,255,.07);}
+.tag-orange{color:var(--accent3);border-color:rgba(247,129,102,.3);background:rgba(247,129,102,.07);}
+.tag-gold{color:var(--gold);border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.07);}
+
+/* FEATURED */
+.featured-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.featured-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--gold));}
+.featured-badge{display:inline-block;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(210,153,34,.4);background:rgba(210,153,34,.08);padding:.25rem .7rem;border-radius:3px;margin-bottom:1rem;}
+.featured-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:.8rem;}
+.deliverables{margin:1.2rem 0;display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.deliverable{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1rem;}
+.deliverable-title{font-weight:600;color:var(--accent);margin-bottom:.4rem;font-size:.7rem;}
+.deliverable-body{color:var(--muted);line-height:1.6;font-size:.75rem;}
+
+/* ============================================================
+   CODE VIEWERS SECTION
+============================================================ */
+.code-viewers{margin-top:2.5rem;border-top:1px solid var(--nb-border);padding-top:2rem;}
+
+/* File tab switcher */
+.file-tabs{display:flex;gap:0;margin-bottom:0;}
+.file-tab{display:flex;align-items:center;gap:.55rem;padding:.55rem 1.1rem;font-size:.68rem;cursor:pointer;background:var(--surface2);border:1px solid var(--nb-border);border-bottom:none;color:var(--muted);transition:all .2s;border-radius:5px 5px 0 0;margin-right:3px;letter-spacing:.04em;}
+.file-tab .ftdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.file-tab.active{background:var(--nb-bg);border-color:rgba(0,212,170,.25);}
+.file-tab.active .ftlabel{color:var(--accent);}
+.file-tab:hover:not(.active){color:var(--text);}
+
+.file-panel{display:none;}
+.file-panel.active{display:block;}
+
+/* ---- NOTEBOOK ---- */
+.nb-topbar{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;background:rgba(255,255,255,.015);border:1px solid var(--nb-border);border-top:none;border-bottom:none;flex-wrap:wrap;gap:.6rem;}
+.nb-info-row{display:flex;align-items:center;gap:.7rem;}
+.nb-icon{width:26px;height:26px;background:linear-gradient(135deg,#ff6b35,#f7c948);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#000;flex-shrink:0;}
+.nb-filename{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;}
+.nb-meta{font-size:.58rem;color:var(--muted);letter-spacing:.06em;}
+.nb-tabs{display:flex;gap:.3rem;}
+.nb-tab{font-size:.63rem;padding:.28rem .8rem;border-radius:4px 4px 0 0;border:1px solid var(--nb-border);border-bottom:none;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .2s;}
+.nb-tab.active{background:var(--nb-bg);color:var(--accent);border-color:rgba(0,212,170,.3);}
+.nb-tab:hover:not(.active){color:var(--text);}
+
+.nb-viewer{background:var(--nb-bg);border:1px solid var(--nb-border);border-radius:0 6px 6px 6px;overflow:hidden;}
+.nb-step{display:none;}
+.nb-step.active{display:block;}
+.nb-cell-bar{display:flex;align-items:center;gap:.7rem;padding:.5rem 1rem;background:rgba(255,255,255,.02);border-bottom:1px solid var(--nb-border);}
+.nb-cell-badge{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:.16rem .48rem;border-radius:3px;border:1px solid;}
+.nb-cell-badge.code{color:var(--accent2);border-color:rgba(88,166,255,.3);background:rgba(88,166,255,.07);}
+.nb-cell-badge.md{color:var(--gold);border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.07);}
+.nb-cell-num{font-size:.58rem;color:var(--muted);margin-left:auto;}
+.nb-md-content{padding:.7rem 1.5rem;font-size:.85rem;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;}
+.nb-code-content{padding:1.1rem 1.5rem;font-size:.77rem;line-height:1.8;overflow-x:auto;white-space:pre;}
+.nb-output{border-top:1px solid var(--nb-border);background:rgba(0,0,0,.2);}
+.nb-output-bar{padding:.45rem 1rem;font-size:.56rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--nb-border);display:flex;align-items:center;gap:.5rem;}
+.nb-output-bar::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;}
+.nb-table-wrap{overflow-x:auto;padding:.7rem 1rem;}
+.nb-table{border-collapse:collapse;font-size:.66rem;min-width:500px;}
+.nb-table th{background:rgba(0,212,170,.08);color:var(--accent);padding:.4rem .75rem;text-align:left;border:1px solid var(--nb-border);white-space:nowrap;font-size:.6rem;letter-spacing:.04em;}
+.nb-table td{padding:.38rem .75rem;border:1px solid var(--nb-border);color:var(--muted);white-space:nowrap;}
+.nb-table tr:hover td{background:rgba(255,255,255,.02);color:var(--text);}
+.nb-stdout{padding:.7rem 1.5rem;font-size:.74rem;color:var(--accent);font-style:italic;}
+.nb-step-footer{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1rem;background:rgba(0,0,0,.15);border-top:1px solid var(--nb-border);}
+.nb-step-label{font-size:.6rem;color:var(--muted);letter-spacing:.07em;}
+.nb-nav-btns{display:flex;gap:.4rem;}
+.nb-nav-btn{background:var(--surface2);border:1px solid var(--nb-border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.63rem;padding:.28rem .75rem;border-radius:3px;cursor:pointer;transition:all .2s;}
+.nb-nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.nb-nav-btn:disabled{opacity:.3;cursor:default;}
+
+/* PySpark syntax */
+.kw{color:#ff7b72;}.fn{color:#d2a8ff;}.str{color:#a5d6ff;}.cm{color:#5c6e82;font-style:italic;}.num{color:#79c0ff;}
+
+/* ---- TERRAFORM ---- */
+.tf-viewer{background:var(--nb-bg);border:1px solid var(--nb-border);border-radius:0 6px 6px 6px;overflow:hidden;}
+.tf-topbar{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:rgba(255,255,255,.02);border-bottom:1px solid var(--nb-border);flex-wrap:wrap;gap:.6rem;}
+.tf-info-row{display:flex;align-items:center;gap:.7rem;}
+.tf-icon{width:26px;height:26px;background:linear-gradient(135deg,#7b42bc,#5c4ee8);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:#fff;flex-shrink:0;}
+.tf-filename{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;}
+.tf-meta{font-size:.58rem;color:var(--muted);letter-spacing:.06em;}
+.tf-block-nav{display:flex;gap:.3rem;flex-wrap:wrap;}
+.tf-block-btn{font-size:.6rem;padding:.22rem .6rem;border-radius:3px;border:1px solid var(--nb-border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .2s;}
+.tf-block-btn.active{background:rgba(123,66,188,.15);border-color:rgba(123,66,188,.5);color:#b784f5;}
+.tf-block-btn:hover:not(.active){color:var(--text);}
+
+.tf-layout{display:grid;grid-template-columns:1fr 270px;}
+.tf-code-col{border-right:1px solid var(--nb-border);overflow-x:auto;}
+.tf-block{display:none;}
+.tf-block.active{display:block;}
+.tf-block-header{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;background:rgba(123,66,188,.06);border-bottom:1px solid var(--nb-border);}
+.tf-badge{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:#b784f5;border:1px solid rgba(123,66,188,.3);background:rgba(123,66,188,.1);padding:.16rem .48rem;border-radius:3px;}
+.tf-block-desc{font-size:.65rem;color:var(--muted);}
+.tf-code{padding:1.1rem 1.5rem;font-size:.76rem;line-height:1.8;white-space:pre;overflow-x:auto;}
+/* Terraform syntax */
+.tf-kw{color:#ff7b72;}.tf-type{color:#79c0ff;}.tf-name{color:#ffa657;}.tf-attr{color:#e6edf3;}.tf-str{color:#a5d6ff;}.tf-bool{color:#d2a8ff;}.tf-num{color:#79c0ff;}.tf-cm{color:#5c6e82;font-style:italic;}.tf-ref{color:#00d4aa;}
+
+.tf-side{padding:1.1rem;display:flex;flex-direction:column;gap:.9rem;}
+.tf-side-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);padding-bottom:.4rem;border-bottom:1px solid var(--nb-border);}
+.tf-res-list{display:flex;flex-direction:column;gap:.3rem;}
+.tf-res-item{display:flex;align-items:flex-start;gap:.45rem;padding:.45rem .55rem;border-radius:4px;border:1px solid transparent;cursor:pointer;transition:all .2s;}
+.tf-res-item:hover,.tf-res-item.active{background:rgba(123,66,188,.08);border-color:rgba(123,66,188,.25);}
+.tf-res-dot{width:7px;height:7px;border-radius:50%;margin-top:3px;flex-shrink:0;}
+.tf-res-type{font-size:.58rem;color:var(--muted);}
+.tf-res-name{font-size:.65rem;color:var(--text);}
+.tf-plan-box{background:rgba(0,0,0,.2);border:1px solid var(--nb-border);border-radius:5px;padding:.75rem;}
+.tf-plan-label{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;}
+.tf-plan-row{font-size:.63rem;padding:.15rem 0;display:flex;align-items:center;gap:.35rem;}
+.tf-plus{color:#3fb950;}.tf-tilde{color:var(--gold);}
+.tf-plan-sum{margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--nb-border);font-size:.6rem;color:#3fb950;}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:4rem;}
+.metric{background:var(--surface);padding:2rem;text-align:center;}
+.metric-value{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--accent);display:block;}
+.metric-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:.4rem;}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;}
+.skill-group{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;}
+.skill-group-title{font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+.skill-item{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;font-size:.78rem;}
+.skill-item::before{content:'›';color:var(--accent);font-weight:700;}
+
+/* CONTACT */
+#contact{text-align:center;}
+.contact-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4rem;max-width:600px;margin:0 auto;position:relative;overflow:hidden;}
+.contact-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,212,170,.06),transparent 60%);pointer-events:none;}
+.contact-title{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-bottom:1rem;}
+.contact-desc{color:var(--muted);font-size:.82rem;line-height:1.7;margin-bottom:2rem;}
+.contact-email{display:inline-block;font-size:.85rem;color:var(--accent);border:1px solid rgba(0,212,170,.3);padding:.8rem 2rem;border-radius:4px;text-decoration:none;transition:all .2s;margin-bottom:1.5rem;}
+.contact-email:hover{background:rgba(0,212,170,.08);transform:translateY(-2px);}
+.lang-badges{display:flex;justify-content:center;gap:.8rem;margin-top:1.5rem;flex-wrap:wrap;}
+.lang-badge{font-size:.68rem;padding:.3rem .8rem;border-radius:20px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);}
+
+footer{text-align:center;padding:2rem;font-size:.65rem;color:var(--muted);border-top:1px solid var(--border);letter-spacing:.1em;position:relative;z-index:1;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+[data-i18n],[data-i18n-html]{transition:opacity .15s;}
+.lang-fade{opacity:0!important;}
+
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}.nav-links{display:none;}
+  #hero{padding:8rem 2rem 4rem;}
+  section{padding:4rem 2rem;}
+  .pipeline-visual{display:none;}
+  .deliverables{grid-template-columns:1fr;}
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .tf-layout{grid-template-columns:1fr;}.tf-side{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">DE.Portfolio</div>
+  <div class="nav-links">
+    <a href="#about" data-i18n="nav_about">About</a>
+    <a href="#projects" data-i18n="nav_projects">Projects</a>
+    <a href="#experience" data-i18n="nav_experience">Experience</a>
+    <a href="#skills" data-i18n="nav_skills">Skills</a>
+    <a href="#contact" data-i18n="nav_contact">Contact</a>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('nl')">NL</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="position:relative;">
+  <div class="hero-tag" data-i18n="hero_available">Available for new engagements</div>
+  <h1 data-i18n-html="hero_title">Senior<br><span>Data Engineer</span><br><span class="dim">Azure &amp; Cloud</span></h1>
+  <p class="hero-desc" data-i18n="hero_desc">I design and build production-grade data pipelines, ETL architectures, and cloud infrastructure — helping organisations turn raw data into reliable, actionable insights.</p>
+  <div class="hero-pills">
+    <span class="pill">Azure</span><span class="pill">Databricks</span><span class="pill">Airflow</span>
+    <span class="pill">Terraform</span><span class="pill">Power BI</span><span class="pill">PySpark</span>
+    <span class="pill">Informatica</span><span class="pill">SQL</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary" data-i18n="hero_cta1">View Projects</a>
+    <a href="#contact" class="btn btn-outline" data-i18n="hero_cta2">Get in Touch</a>
+  </div>
+  <div class="pipeline-visual">
+    <div class="pipe-node"><div class="node-dot dot-bronze"></div><div><div class="node-label">Bronze Layer</div><div class="node-sub">Raw Ingestion · ADF · Event Triggers</div></div></div>
+    <div class="pipe-node"><div class="node-dot dot-silver"></div><div><div class="node-label">Silver Layer</div><div class="node-sub">PySpark · Databricks · Cleansing</div></div></div>
+    <div class="pipe-node"><div class="node-dot dot-gold"></div><div><div class="node-label">Gold Layer</div><div class="node-sub">Business Logic · Analytics-ready</div></div></div>
+    <div class="pipe-node"><div class="node-dot dot-bi"></div><div><div class="node-label">Power BI</div><div class="node-sub">Dashboards · Business Insights</div></div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="metrics reveal">
+    <div class="metric"><span class="metric-value">3+</span><span class="metric-label" data-i18n="metric1">Years Experience</span></div>
+    <div class="metric"><span class="metric-value">100%</span><span class="metric-label" data-i18n="metric2">Cloud-Native</span></div>
+    <div class="metric"><span class="metric-value">E2E</span><span class="metric-label" data-i18n="metric3">Pipeline Coverage</span></div>
+    <div class="metric"><span class="metric-value">IaC</span><span class="metric-label" data-i18n="metric4">Infra as Code</span></div>
+  </div>
+  <div class="section-header reveal">
+    <span class="section-tag" data-i18n="nav_about">About</span>
+    <h2 data-i18n-html="about_title">Built for <em>complex</em>,<br>high-stakes data environments</h2>
+  </div>
+  <div class="cards-grid">
+    <div class="card reveal"><div class="card-title" data-i18n="about_c1_title">Banking-grade reliability</div><p class="card-body" data-i18n="about_c1_body">Over 2 years designing ETL pipelines in a highly regulated banking environment at BNP Paribas Fortis — where data quality, auditability and compliance are non-negotiable.</p></div>
+    <div class="card reveal"><div class="card-title" data-i18n="about_c2_title">Cloud architecture, end-to-end</div><p class="card-body" data-i18n="about_c2_body">From Terraform-managed infrastructure across Dev/QA/Prod to Databricks PySpark transformations and Power BI dashboards — I own the full data stack and deliver complete, documented solutions.</p></div>
+    <div class="card reveal"><div class="card-title" data-i18n="about_c3_title">Security-first mindset</div><p class="card-body" data-i18n="about_c3_body">I integrate Managed Identities, Linked Services, and passwordless architectures by default. No hardcoded credentials, no security shortcuts — especially critical in financial and enterprise contexts.</p></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <span class="section-tag" data-i18n="nav_projects">Projects</span>
+    <h2 data-i18n-html="projects_title">What I <em>build</em></h2>
+  </div>
+
+  <div class="featured-card reveal">
+    <div class="featured-badge" data-i18n="featured_badge">★ Featured Project</div>
+    <div class="featured-title">Azure End-to-End Automated Pipeline</div>
+    <p class="card-body" style="max-width:700px;" data-i18n="featured_desc">Designed and implemented a complete Medallion architecture (Bronze / Silver / Gold) with hybrid orchestration and full Infrastructure as Code — automating banking data workflows from raw ingestion to interactive dashboards.</p>
+    <div class="deliverables">
+      <div class="deliverable"><div class="deliverable-title">⬡ IaC &amp; DevOps</div><div class="deliverable-body" data-i18n="deliv1">Full environments (Dev/QA/Prod) deployed with Terraform. Automated resource lifecycle and Budget Alerts for cost optimisation.</div></div>
+      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv2_title">Hybrid Orchestration</span></div><div class="deliverable-body" data-i18n="deliv2">Multi-cloud workflows piloted via Dockerized Airflow with Managed Identities for passwordless, secure integration.</div></div>
+      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv3_title">Automated Ingestion</span></div><div class="deliverable-body" data-i18n="deliv3">ADF pipelines with Event-Based Triggers ingest raw CSVs into Bronze in real-time, monitored continuously by Airflow.</div></div>
+      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv4_title">Spark Transformation</span></div><div class="deliverable-body" data-i18n="deliv4">Databricks PySpark Jobs implement Silver/Gold business logic with automated status reporting via Python scripts.</div></div>
+    </div>
+    <div class="card-tags" style="margin-top:1.5rem;">
+      <span class="tag tag-green">Azure Data Factory</span><span class="tag tag-green">Databricks</span>
+      <span class="tag tag-blue">Terraform</span><span class="tag tag-blue">Airflow</span>
+      <span class="tag tag-gold">Power BI</span><span class="tag tag-orange">PySpark</span>
+      <span class="tag tag-green">Medallion Architecture</span><span class="tag tag-blue">Docker</span>
+    </div>
+
+    <!-- ═══════════════ CODE VIEWERS ═══════════════ -->
+    <div class="code-viewers">
+
+      <!-- File tab switcher -->
+      <div class="file-tabs">
+        <div class="file-tab active" onclick="switchFile('nb')">
+          <span class="ftdot" style="background:linear-gradient(135deg,#ff6b35,#f7c948);"></span>
+          <span class="ftlabel">Transformation_Gold_Spark.ipynb</span>
+        </div>
+        <div class="file-tab" onclick="switchFile('tf')">
+          <span class="ftdot" style="background:linear-gradient(135deg,#7b42bc,#5c4ee8);"></span>
+          <span class="ftlabel">main.tf</span>
+        </div>
+      </div>
+
+      <!-- ─── PANEL: NOTEBOOK ─── -->
+      <div class="file-panel active" id="panel-nb">
+        <div class="nb-topbar">
+          <div class="nb-info-row">
+            <div class="nb-icon">db</div>
+            <div><div class="nb-filename">Transformation_Gold_Spark.ipynb</div><div class="nb-meta">Databricks · PySpark · Python 3 · Silver → Gold</div></div>
+          </div>
+          <div class="nb-tabs">
+            <div class="nb-tab active" onclick="showStep(0)" data-i18n="nb_tab0">1 · Connection</div>
+            <div class="nb-tab" onclick="showStep(1)" data-i18n="nb_tab1">2 · Transformation</div>
+            <div class="nb-tab" onclick="showStep(2)" data-i18n="nb_tab2">3 · Load</div>
+          </div>
+        </div>
+        <div class="nb-viewer">
+
+          <!-- Step 0 -->
+          <div class="nb-step active" id="nb-step-0">
+            <div class="nb-cell-bar"><span class="nb-cell-badge md">markdown</span><span class="nb-cell-num">[ ]</span></div>
+            <div class="nb-md-content">## 1. Connection to Azure Data Lake and file extraction</div>
+            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[1]</span></div>
+            <div class="nb-code-content"><span class="cm"># 1. Security: give account key to Spark</span>
+spark.conf.<span class="fn">set</span>(
+    <span class="str">""</span>,  <span class="cm"># account.key</span>
+    <span class="str">""</span>   <span class="cm"># key</span>
+)
+
+<span class="cm"># 2. Path to file in datalake container</span>
+path_bronze = <span class="str">""</span>  <span class="cm"># path to data lake container</span></div>
+            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[2]</span></div>
+            <div class="nb-code-content"><span class="cm"># 3. Ask Spark to read the CSV and infer column types</span>
+df = spark.read.<span class="fn">format</span>(<span class="str">"csv"</span>) \
+    .<span class="fn">option</span>(<span class="str">"header"</span>, <span class="str">"true"</span>) \
+    .<span class="fn">option</span>(<span class="str">"inferSchema"</span>, <span class="str">"true"</span>) \
+    .<span class="fn">load</span>(path_bronze)
+
+<span class="cm"># 4. Display first 10 rows</span>
+<span class="fn">display</span>(df.<span class="fn">limit</span>(<span class="num">10</span>))</div>
+            <div class="nb-output">
+              <div class="nb-output-bar">Output — DataFrame (10 rows × 23 columns)</div>
+              <div class="nb-table-wrap">
+                <table class="nb-table">
+                  <thead><tr><th>CLIENTNUM</th><th>Attrition_Flag</th><th>Customer_Age</th><th>Gender</th><th>Income_Category</th><th>Card_Category</th><th>Credit_Limit</th><th>Total_Trans_Amt</th><th>Avg_Utilization_Ratio</th></tr></thead>
+                  <tbody>
+                    <tr><td>768805383</td><td>Existing Customer</td><td>45</td><td>M</td><td>$60K - $80K</td><td>Blue</td><td>12691.0</td><td>1144</td><td>0.061</td></tr>
+                    <tr><td>818770008</td><td>Existing Customer</td><td>49</td><td>F</td><td>Less than $40K</td><td>Blue</td><td>8256.0</td><td>1291</td><td>0.105</td></tr>
+                    <tr><td>713982108</td><td>Existing Customer</td><td>51</td><td>M</td><td>$80K - $120K</td><td>Blue</td><td>3418.0</td><td>1887</td><td>0.0</td></tr>
+                    <tr><td>769911858</td><td>Existing Customer</td><td>40</td><td>F</td><td>Less than $40K</td><td>Blue</td><td>3313.0</td><td>1171</td><td>0.76</td></tr>
+                    <tr><td>709106358</td><td>Existing Customer</td><td>40</td><td>M</td><td>$60K - $80K</td><td>Blue</td><td>4716.0</td><td>816</td><td>0.0</td></tr>
+                    <tr><td>810347208</td><td>Existing Customer</td><td>51</td><td>M</td><td>$120K +</td><td>Gold</td><td>34516.0</td><td>1330</td><td>0.066</td></tr>
+                    <tr><td>818906208</td><td>Existing Customer</td><td>32</td><td>M</td><td>$60K - $80K</td><td>Silver</td><td>29081.0</td><td>1538</td><td>0.048</td></tr>
+                    <tr><td>710930508</td><td>Existing Customer</td><td>37</td><td>M</td><td>$60K - $80K</td><td>Blue</td><td>22352.0</td><td>1350</td><td>0.113</td></tr>
+                    <tr><td>719661558</td><td>Existing Customer</td><td>48</td><td>M</td><td>$80K - $120K</td><td>Blue</td><td>11656.0</td><td>1441</td><td>0.144</td></tr>
+                    <tr><td>713061558</td><td>Existing Customer</td><td>44</td><td>M</td><td>$40K - $60K</td><td>Blue</td><td>4010.0</td><td>1088</td><td>0.311</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="nb-step-footer">
+              <span class="nb-step-label" data-i18n="nb_s1">Step 1 of 3</span>
+              <div class="nb-nav-btns">
+                <button class="nb-nav-btn" disabled data-i18n="nb_prev">← Prev</button>
+                <button class="nb-nav-btn" onclick="showStep(1)" data-i18n="nb_next">Next →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 1 -->
+          <div class="nb-step" id="nb-step-1">
+            <div class="nb-cell-bar"><span class="nb-cell-badge md">markdown</span><span class="nb-cell-num">[ ]</span></div>
+            <div class="nb-md-content">## 2. Transformation</div>
+            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[3]</span></div>
+            <div class="nb-code-content"><span class="kw">from</span> pyspark.sql.functions <span class="kw">import</span> <span class="fn">col</span>, <span class="fn">when</span>
+
+<span class="cm"># Create 'Senior' column: 1 if Customer_Age >= 60, else 0</span>
+df_gold = df.<span class="fn">withColumn</span>(
+    <span class="str">"EstSenior"</span>,
+    <span class="fn">when</span>(<span class="fn">col</span>(<span class="str">"Customer_Age"</span>) >= <span class="num">60</span>, <span class="num">1</span>).<span class="fn">otherwise</span>(<span class="num">0</span>)
+)
+
+<span class="cm"># Verify the result</span>
+<span class="fn">display</span>(df_gold.<span class="fn">select</span>(<span class="str">"CLIENTNUM"</span>, <span class="str">"Customer_Age"</span>, <span class="str">"EstSenior"</span>).<span class="fn">limit</span>(<span class="num">10</span>))</div>
+            <div class="nb-output">
+              <div class="nb-output-bar">Output — Gold DataFrame with derived column EstSenior</div>
+              <div class="nb-table-wrap">
+                <table class="nb-table">
+                  <thead><tr><th>CLIENTNUM</th><th>Customer_Age</th><th>EstSenior</th></tr></thead>
+                  <tbody>
+                    <tr><td>768805383</td><td>45</td><td>0</td></tr><tr><td>818770008</td><td>49</td><td>0</td></tr>
+                    <tr><td>713982108</td><td>51</td><td>0</td></tr><tr><td>769911858</td><td>40</td><td>0</td></tr>
+                    <tr><td>709106358</td><td>40</td><td>0</td></tr><tr><td>810347208</td><td>51</td><td>0</td></tr>
+                    <tr><td>818906208</td><td>32</td><td>0</td></tr><tr><td>710930508</td><td>37</td><td>0</td></tr>
+                    <tr><td>719661558</td><td>48</td><td>0</td></tr><tr><td>713061558</td><td>44</td><td>0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="nb-step-footer">
+              <span class="nb-step-label" data-i18n="nb_s2">Step 2 of 3</span>
+              <div class="nb-nav-btns">
+                <button class="nb-nav-btn" onclick="showStep(0)" data-i18n="nb_prev">← Prev</button>
+                <button class="nb-nav-btn" onclick="showStep(2)" data-i18n="nb_next">Next →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="nb-step" id="nb-step-2">
+            <div class="nb-cell-bar"><span class="nb-cell-badge md">markdown</span><span class="nb-cell-num">[ ]</span></div>
+            <div class="nb-md-content">## 3. Load</div>
+            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[4]</span></div>
+            <div class="nb-code-content"><span class="cm"># Path to Gold zone in data lake</span>
+path_gold = <span class="str">""</span>
+
+<span class="cm"># Save as Delta format for high-performance analytics</span>
+df_gold.write \
+    .<span class="fn">format</span>(<span class="str">"delta"</span>) \
+    .<span class="fn">mode</span>(<span class="str">"overwrite"</span>) \
+    .<span class="fn">save</span>(path_gold)
+
+<span class="fn">print</span>(<span class="str">"Bravo ! Les données transformées sont enregistrées dans la zone Gold."</span>)</div>
+            <div class="nb-output">
+              <div class="nb-output-bar">stdout</div>
+              <div class="nb-stdout">Bravo ! Les données transformées sont enregistrées dans la zone Gold.</div>
+            </div>
+            <div class="nb-step-footer">
+              <span class="nb-step-label" data-i18n="nb_s3">Step 3 of 3</span>
+              <div class="nb-nav-btns">
+                <button class="nb-nav-btn" onclick="showStep(1)" data-i18n="nb_prev">← Prev</button>
+                <button class="nb-nav-btn" disabled data-i18n="nb_next">Next →</button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /nb-viewer -->
+      </div><!-- /panel-nb -->
+
+      <!-- ─── PANEL: TERRAFORM ─── -->
+      <div class="file-panel" id="panel-tf">
+        <div class="tf-viewer">
+          <div class="tf-topbar">
+            <div class="tf-info-row">
+              <div class="tf-icon">tf</div>
+              <div><div class="tf-filename">main.tf</div><div class="tf-meta">Terraform · Azure Provider ~3.0 · IaC · Dev environment</div></div>
+            </div>
+            <div class="tf-block-nav">
+              <button class="tf-block-btn active" onclick="showTfBlock(0)" data-i18n="tf_b0">Provider</button>
+              <button class="tf-block-btn" onclick="showTfBlock(1)" data-i18n="tf_b1">Resource Group</button>
+              <button class="tf-block-btn" onclick="showTfBlock(2)" data-i18n="tf_b2">Storage</button>
+              <button class="tf-block-btn" onclick="showTfBlock(3)" data-i18n="tf_b3">Data Factory</button>
+              <button class="tf-block-btn" onclick="showTfBlock(4)" data-i18n="tf_b4">Permissions</button>
+              <button class="tf-block-btn" onclick="showTfBlock(5)" data-i18n="tf_b5">Linked Service</button>
+            </div>
+          </div>
+          <div class="tf-layout">
+            <div class="tf-code-col">
+
+              <!-- TF block 0 -->
+              <div class="tf-block active" id="tf-b0">
+                <div class="tf-block-header"><span class="tf-badge">terraform</span><span class="tf-block-desc">Provider configuration — Azure RM ~3.0</span></div>
+                <div class="tf-code"><span class="tf-cm"># 1. Define provider (Azure)</span>
+<span class="tf-kw">terraform</span> {
+  required_providers {
+    <span class="tf-attr">azurerm</span> = {
+      <span class="tf-attr">source</span>  = <span class="tf-str">"hashicorp/azurerm"</span>
+      <span class="tf-attr">version</span> = <span class="tf-str">"~> 3.0"</span>
+    }
+  }
+}
+
+<span class="tf-kw">provider</span> <span class="tf-str">"azurerm"</span> {
+  features {}
+}</div>
+              </div>
+
+              <!-- TF block 1 -->
+              <div class="tf-block" id="tf-b1">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_resource_group · rg_dev · West Europe</span></div>
+                <div class="tf-code"><span class="tf-cm"># 2. Create Resource Group for DEV</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_resource_group"</span> <span class="tf-name">"rg_dev"</span> {
+  <span class="tf-attr">name</span>     = <span class="tf-str">"rg-data-project-dev"</span>
+  <span class="tf-attr">location</span> = <span class="tf-str">"West Europe"</span>
+  <span class="tf-attr">tags</span> = {
+    <span class="tf-attr">environment</span> = <span class="tf-str">"dev"</span>
+    <span class="tf-attr">owner</span>       = <span class="tf-str">"data-project"</span>
+  }
+}</div>
+              </div>
+
+              <!-- TF block 2 -->
+              <div class="tf-block" id="tf-b2">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_storage_account + consumption_budget · Data Lake Gen2</span></div>
+                <div class="tf-code"><span class="tf-cm"># 3. Create Storage Account (Data Lake Gen2) for DEV</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_storage_account"</span> <span class="tf-name">"sa_dev"</span> {
+  <span class="tf-attr">name</span>                     = <span class="tf-str">"sadataprojectdev001"</span>
+  <span class="tf-attr">resource_group_name</span>      = <span class="tf-ref">azurerm_resource_group.rg_dev.name</span>
+  <span class="tf-attr">location</span>                 = <span class="tf-ref">azurerm_resource_group.rg_dev.location</span>
+  <span class="tf-attr">account_tier</span>             = <span class="tf-str">"Standard"</span>
+  <span class="tf-attr">account_replication_type</span> = <span class="tf-str">"LRS"</span>
+  <span class="tf-attr">is_hns_enabled</span>           = <span class="tf-bool">true</span>  <span class="tf-cm"># Activate Data Lake Gen2</span>
+}
+
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_consumption_budget_resource_group"</span> <span class="tf-name">"budget"</span> {
+  <span class="tf-attr">name</span>              = <span class="tf-str">"budget-alerte-dev"</span>
+  <span class="tf-attr">resource_group_id</span> = <span class="tf-ref">azurerm_resource_group.rg_dev.id</span>
+  <span class="tf-attr">amount</span>            = <span class="tf-num">5</span>
+  <span class="tf-attr">time_grain</span>        = <span class="tf-str">"Monthly"</span>
+  time_period {
+    <span class="tf-attr">start_date</span> = <span class="tf-str">"2026-02-01T00:00:00Z"</span>
+    <span class="tf-attr">end_date</span>   = <span class="tf-str">"2026-12-31T23:59:59Z"</span>
+  }
+  notification {
+    <span class="tf-attr">enabled</span>        = <span class="tf-bool">true</span>
+    <span class="tf-attr">threshold</span>      = <span class="tf-num">90.0</span>  <span class="tf-cm"># Alert at 90% of budget (4.50€)</span>
+    <span class="tf-attr">operator</span>       = <span class="tf-str">"EqualTo"</span>
+    <span class="tf-attr">contact_emails</span> = [<span class="tf-str">""</span>]
+  }
+}</div>
+              </div>
+
+              <!-- TF block 3 -->
+              <div class="tf-block" id="tf-b3">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_data_factory · adf_dev — SystemAssigned Managed Identity</span></div>
+                <div class="tf-code"><span class="tf-cm"># Azure Data Factory Deployment</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_data_factory"</span> <span class="tf-name">"adf_dev"</span> {
+  <span class="tf-attr">name</span>                = <span class="tf-str">"adf-project-data-dev-001"</span>
+  <span class="tf-attr">location</span>            = <span class="tf-ref">azurerm_resource_group.rg_dev.location</span>
+  <span class="tf-attr">resource_group_name</span> = <span class="tf-ref">azurerm_resource_group.rg_dev.name</span>
+
+  <span class="tf-cm"># Managed Identity — no passwords needed</span>
+  identity {
+    <span class="tf-attr">type</span> = <span class="tf-str">"SystemAssigned"</span>
+  }
+
+  <span class="tf-attr">tags</span> = {
+    <span class="tf-attr">environment</span> = <span class="tf-str">"dev"</span>
+    <span class="tf-attr">managed_by</span>  = <span class="tf-str">"terraform"</span>
+  }
+}
+
+<span class="tf-cm"># Expose ADF name after apply</span>
+<span class="tf-kw">output</span> <span class="tf-str">"data_factory_name"</span> {
+  <span class="tf-attr">value</span> = <span class="tf-ref">azurerm_data_factory.adf_dev.name</span>
+}</div>
+              </div>
+
+              <!-- TF block 4 -->
+              <div class="tf-block" id="tf-b4">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_role_assignment · ADF → Storage Blob Data Contributor</span></div>
+                <div class="tf-code"><span class="tf-cm"># Grant ADF's Managed Identity access to the Data Lake</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_role_assignment"</span> <span class="tf-name">"adf_to_storage"</span> {
+  <span class="tf-attr">scope</span>                = <span class="tf-ref">azurerm_storage_account.sa_dev.id</span>
+  <span class="tf-attr">role_definition_name</span> = <span class="tf-str">"Storage Blob Data Contributor"</span>
+  <span class="tf-attr">principal_id</span>         = <span class="tf-ref">azurerm_data_factory.adf_dev.identity[0].principal_id</span>
+}</div>
+              </div>
+
+              <!-- TF block 5 -->
+              <div class="tf-block" id="tf-b5">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_data_factory_linked_service · LS_AzureDataLake_Dev</span></div>
+                <div class="tf-code"><span class="tf-cm"># Linked Service: ADF connects to Data Lake via Managed Identity</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_data_factory_linked_service_azure_blob_storage"</span> <span class="tf-name">"ls_storage_dev"</span> {
+  <span class="tf-attr">name</span>            = <span class="tf-str">"LS_AzureDataLake_Dev"</span>
+  <span class="tf-attr">data_factory_id</span> = <span class="tf-ref">azurerm_data_factory.adf_dev.id</span>
+
+  <span class="tf-attr">service_endpoint</span>     = <span class="tf-ref">azurerm_storage_account.sa_dev.primary_blob_endpoint</span>
+  <span class="tf-attr">use_managed_identity</span> = <span class="tf-bool">true</span>
+
+  <span class="tf-attr">depends_on</span> = [<span class="tf-ref">azurerm_role_assignment.adf_to_storage</span>]
+}</div>
+              </div>
+
+            </div><!-- /tf-code-col -->
+
+            <!-- Terraform side panel -->
+            <div class="tf-side">
+              <div class="tf-side-label" data-i18n="tf_resources">Resources declared</div>
+              <div class="tf-res-list">
+                <div class="tf-res-item active" onclick="showTfBlock(0)"><span class="tf-res-dot" style="background:#7b42bc;"></span><div><div class="tf-res-type">terraform</div><div class="tf-res-name">provider config</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock(1)"><span class="tf-res-dot" style="background:#58a6ff;"></span><div><div class="tf-res-type">resource_group</div><div class="tf-res-name">rg_dev</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock(2)"><span class="tf-res-dot" style="background:#00d4aa;"></span><div><div class="tf-res-type">storage_account</div><div class="tf-res-name">sa_dev + budget</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock(3)"><span class="tf-res-dot" style="background:#d29922;"></span><div><div class="tf-res-type">data_factory</div><div class="tf-res-name">adf_dev</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock(4)"><span class="tf-res-dot" style="background:#f78166;"></span><div><div class="tf-res-type">role_assignment</div><div class="tf-res-name">adf_to_storage</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock(5)"><span class="tf-res-dot" style="background:#58a6ff;"></span><div><div class="tf-res-type">linked_service</div><div class="tf-res-name">ls_storage_dev</div></div></div>
+              </div>
+              <div class="tf-plan-box">
+                <div class="tf-plan-label" data-i18n="tf_plan">terraform plan</div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_resource_group</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_storage_account</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">consumption_budget</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_data_factory</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_role_assignment</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">linked_service_blob</span></div>
+                <div class="tf-plan-sum">6 to add, 0 to change, 0 to destroy</div>
+              </div>
+            </div>
+
+          </div><!-- /tf-layout -->
+        </div><!-- /tf-viewer -->
+      </div><!-- /panel-tf -->
+
+    </div><!-- /code-viewers -->
+  </div><!-- /featured-card -->
+
+  <!-- OTHER PROJECTS -->
+  <div class="cards-grid">
+    <div class="card reveal">
+      <div class="card-header">
+        <div><div class="card-title" data-i18n="aml_title">AML Model Monitoring</div><div class="card-subtitle" data-i18n="aml_sub">Complidata · Internship</div></div>
+        <div class="card-date">2021</div>
+      </div>
+      <p class="card-body" data-i18n="aml_body">Research and implementation of performance drift monitoring for Anti-Money Laundering models. Documented best practices and presented findings to multidisciplinary stakeholders.</p>
+      <div class="card-tags"><span class="tag tag-blue">Model Monitoring</span><span class="tag tag-orange">AML / Compliance</span><span class="tag tag-green">Python</span><span class="tag tag-blue">Data Science</span></div>
+    </div>
+    <div class="card reveal" style="border-color:rgba(0,212,170,.2);background:linear-gradient(135deg,var(--surface),rgba(0,212,170,.03));">
+      <div class="card-header"><div><div class="card-title" data-i18n="next_title">Your Next Project</div><div class="card-subtitle" data-i18n="next_sub">Open for engagements</div></div></div>
+      <p class="card-body" data-i18n="next_body">Looking to modernise your data infrastructure, build reliable pipelines, or implement a cloud-native analytics stack? Let's talk about what we can build together.</p>
+      <div style="margin-top:1rem;"><a href="#contact" class="btn btn-primary" style="font-size:.72rem;padding:.6rem 1.4rem;" data-i18n="next_cta">Start a conversation →</a></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header reveal">
+    <span class="section-tag" data-i18n="nav_experience">Experience</span>
+    <h2 data-i18n-html="exp_title"><em>Proven</em> in production</h2>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:1.5rem;">
+    <div class="card reveal" style="border-left:3px solid var(--accent);">
+      <div class="card-header">
+        <div><div class="card-title">BNP Paribas Fortis</div><div class="card-subtitle" data-i18n="bnp_sub">Data Engineer · Full-time</div></div>
+        <div class="card-date" data-i18n="bnp_date">Jan 2023 → Present</div>
+      </div>
+      <p class="card-body" data-i18n="bnp_body">Designing, developing and maintaining data pipelines and ETL processes feeding a structured Data Warehouse — in a highly regulated banking environment. Production-grade pipelines, unit tests, CI/CD deployments, and code reviews against strict quality standards.</p>
+      <div class="card-tags"><span class="tag tag-green">SQL</span><span class="tag tag-green">Informatica PowerCenter</span><span class="tag tag-blue">ETL Design</span><span class="tag tag-orange">CI/CD</span><span class="tag tag-blue">Data Warehouse</span><span class="tag tag-gold" data-i18n="tag_banking">Banking · Regulated</span></div>
+    </div>
+    <div class="card reveal" style="border-left:3px solid var(--accent2);">
+      <div class="card-header">
+        <div><div class="card-title">Complidata</div><div class="card-subtitle" data-i18n="comp_sub">Data Scientist Intern · Tervuren</div></div>
+        <div class="card-date">Jul – Sep 2021</div>
+      </div>
+      <p class="card-body" data-i18n="comp_body">Maintained and improved AML model performance. Research on model monitoring and performance drift, summarised academic literature, documented best practices. Presented findings to multidisciplinary teams.</p>
+      <div class="card-tags"><span class="tag tag-green">Python</span><span class="tag tag-blue">Model Monitoring</span><span class="tag tag-orange">AML</span><span class="tag tag-blue">Research</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-tag" data-i18n="nav_skills">Skills</span>
+    <h2 data-i18n-html="skills_title">The full <em>stack</em></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg1">Cloud &amp; Infra</div><div class="skill-item">Azure (ADF, Databricks, ADLS)</div><div class="skill-item">Terraform (IaC)</div><div class="skill-item">Docker</div><div class="skill-item">Linux</div></div>
+    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg2">Orchestration &amp; Pipelines</div><div class="skill-item">Apache Airflow</div><div class="skill-item">Informatica PowerCenter</div><div class="skill-item">Azure Data Factory</div><div class="skill-item" data-i18n="sk_cicd">CI/CD Deployments</div></div>
+    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg3">Languages</div><div class="skill-item">Python (PySpark, scripts)</div><div class="skill-item">SQL (advanced)</div><div class="skill-item">Java</div></div>
+    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg4">Analytics &amp; Viz</div><div class="skill-item">Power BI</div><div class="skill-item" data-i18n="sk_dw">Data Warehouse design</div><div class="skill-item">Medallion Architecture</div></div>
+    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg5">Practices</div><div class="skill-item" data-i18n="sk_etl">ETL Pipeline Design</div><div class="skill-item" data-i18n="sk_dq">Data Quality &amp; Monitoring</div><div class="skill-item" data-i18n="sk_cr">Code Reviews</div><div class="skill-item">Agile / Scrum</div></div>
+    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg6">Source Control &amp; DevOps</div><div class="skill-item">Git</div><div class="skill-item" data-i18n="sk_ut">Unit Testing</div><div class="skill-item" data-i18n="sk_ba">Budget Alerting</div><div class="skill-item">Managed Identities</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-box reveal">
+    <span class="section-tag" style="display:block;text-align:center;" data-i18n="nav_contact">Contact</span>
+    <div class="contact-title" data-i18n-html="contact_title">Let's build something <em style="color:var(--accent);font-style:normal;">reliable</em></div>
+    <p class="contact-desc" data-i18n="contact_desc">Whether you need a data pipeline built from scratch, an existing ETL modernised, or a full Azure data platform deployed — I'm open to project-based and long-term engagements.</p>
+    <a href="mailto:your@email.com" class="contact-email">your@email.com</a>
+    <div class="card-tags" style="justify-content:center;">
+      <span class="tag tag-green" data-i18n="tag_freelance">Open to Freelance</span>
+      <span class="tag tag-blue" data-i18n="tag_remote">Remote-friendly</span>
+      <span class="tag tag-orange" data-i18n="tag_location">Belgium &amp; Europe</span>
+    </div>
+    <div class="lang-badges">
+      <span class="lang-badge">🇫🇷 Français (natif)</span>
+      <span class="lang-badge">🇬🇧 English (professional)</span>
+      <span class="lang-badge">🇧🇪 Nederlands (elementair)</span>
+    </div>
+  </div>
+</section>
+
+<footer>&lt;/&gt; <span data-i18n="footer">Built with precision · Data Engineer Portfolio · Brussels, Belgium</span></footer>
+
+<script>
+/* ===================================================
+   FILE SWITCHER
+=================================================== */
+function switchFile(id) {
+  document.querySelectorAll('.file-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.file-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  var tabs = document.querySelectorAll('.file-tab');
+  if (id === 'nb') tabs[0].classList.add('active');
+  else tabs[1].classList.add('active');
+}
+
+/* ===================================================
+   NOTEBOOK STEPS
+=================================================== */
+function showStep(idx) {
+  document.querySelectorAll('.nb-step').forEach(function(s, i) { s.classList.toggle('active', i === idx); });
+  document.querySelectorAll('.nb-tab').forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+}
+
+/* ===================================================
+   TERRAFORM BLOCKS
+=================================================== */
+function showTfBlock(idx) {
+  document.querySelectorAll('.tf-block').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+  document.querySelectorAll('.tf-block-btn').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+  document.querySelectorAll('.tf-res-item').forEach(function(r, i) { r.classList.toggle('active', i === idx); });
+}
+
+/* ===================================================
+   TRANSLATIONS
+=================================================== */
+var T = {
+  en: {
+    nav_about:'About', nav_projects:'Projects', nav_experience:'Experience', nav_skills:'Skills', nav_contact:'Contact',
+    hero_available:'Available for new engagements',
+    hero_title:'Senior<br><span>Data Engineer</span><br><span class="dim">Azure &amp; Cloud</span>',
+    hero_desc:'I design and build production-grade data pipelines, ETL architectures, and cloud infrastructure — helping organisations turn raw data into reliable, actionable insights.',
+    hero_cta1:'View Projects', hero_cta2:'Get in Touch',
+    metric1:'Years Experience', metric2:'Cloud-Native', metric3:'Pipeline Coverage', metric4:'Infra as Code',
+    about_title:'Built for <em>complex</em>,<br>high-stakes data environments',
+    about_c1_title:'Banking-grade reliability',
+    about_c1_body:'Over 2 years designing ETL pipelines in a highly regulated banking environment at BNP Paribas Fortis — where data quality, auditability and compliance are non-negotiable.',
+    about_c2_title:'Cloud architecture, end-to-end',
+    about_c2_body:'From Terraform-managed infrastructure across Dev/QA/Prod to Databricks PySpark transformations and Power BI dashboards — I own the full data stack and deliver complete, documented solutions.',
+    about_c3_title:'Security-first mindset',
+    about_c3_body:'I integrate Managed Identities, Linked Services, and passwordless architectures by default. No hardcoded credentials, no security shortcuts — especially critical in financial and enterprise contexts.',
+    projects_title:'What I <em>build</em>',
+    featured_badge:'★ Featured Project',
+    featured_desc:'Designed and implemented a complete Medallion architecture (Bronze / Silver / Gold) with hybrid orchestration and full Infrastructure as Code — automating banking data workflows from raw ingestion to interactive dashboards.',
+    deliv1:'Full environments (Dev/QA/Prod) deployed with Terraform. Automated resource lifecycle and Budget Alerts for cost optimisation.',
+    deliv2_title:'Hybrid Orchestration', deliv2:'Multi-cloud workflows piloted via Dockerized Airflow with Managed Identities for passwordless, secure integration.',
+    deliv3_title:'Automated Ingestion', deliv3:'ADF pipelines with Event-Based Triggers ingest raw CSVs into Bronze in real-time, monitored continuously by Airflow.',
+    deliv4_title:'Spark Transformation', deliv4:'Databricks PySpark Jobs implement Silver/Gold business logic with automated status reporting via Python scripts.',
+    nb_tab0:'1 · Connection', nb_tab1:'2 · Transformation', nb_tab2:'3 · Load',
+    nb_s1:'Step 1 of 3', nb_s2:'Step 2 of 3', nb_s3:'Step 3 of 3',
+    nb_prev:'← Prev', nb_next:'Next →',
+    tf_b0:'Provider', tf_b1:'Resource Group', tf_b2:'Storage', tf_b3:'Data Factory', tf_b4:'Permissions', tf_b5:'Linked Service',
+    tf_resources:'Resources declared', tf_plan:'terraform plan',
+    aml_title:'AML Model Monitoring', aml_sub:'Complidata · Internship',
+    aml_body:'Research and implementation of performance drift monitoring for Anti-Money Laundering models. Documented best practices and presented findings to multidisciplinary stakeholders.',
+    next_title:'Your Next Project', next_sub:'Open for engagements',
+    next_body:"Looking to modernise your data infrastructure, build reliable pipelines, or implement a cloud-native analytics stack? Let's talk about what we can build together.",
+    next_cta:'Start a conversation →',
+    exp_title:'<em>Proven</em> in production',
+    bnp_sub:'Data Engineer · Full-time', bnp_date:'Jan 2023 → Present',
+    bnp_body:'Designing, developing and maintaining data pipelines and ETL processes feeding a structured Data Warehouse — in a highly regulated banking environment. Production-grade pipelines, unit tests, CI/CD deployments, and code reviews against strict quality standards.',
+    comp_sub:'Data Scientist Intern · Tervuren',
+    comp_body:'Maintained and improved AML model performance. Research on model monitoring and performance drift, summarised academic literature, documented best practices. Presented findings to multidisciplinary teams.',
+    tag_banking:'Banking · Regulated',
+    skills_title:'The full <em>stack</em>',
+    sg1:'Cloud &amp; Infra', sg2:'Orchestration &amp; Pipelines', sg3:'Languages', sg4:'Analytics &amp; Viz', sg5:'Practices', sg6:'Source Control &amp; DevOps',
+    sk_cicd:'CI/CD Deployments', sk_dw:'Data Warehouse design', sk_etl:'ETL Pipeline Design', sk_dq:'Data Quality &amp; Monitoring', sk_cr:'Code Reviews', sk_ut:'Unit Testing', sk_ba:'Budget Alerting',
+    contact_title:'Let\'s build something <em style="color:var(--accent);font-style:normal;">reliable</em>',
+    contact_desc:"Whether you need a data pipeline built from scratch, an existing ETL modernised, or a full Azure data platform deployed — I'm open to project-based and long-term engagements.",
+    tag_freelance:'Open to Freelance', tag_remote:'Remote-friendly', tag_location:'Belgium &amp; Europe',
+    footer:'Built with precision · Data Engineer Portfolio · Brussels, Belgium'
+  },
+  fr: {
+    nav_about:'À propos', nav_projects:'Projets', nav_experience:'Expérience', nav_skills:'Compétences', nav_contact:'Contact',
+    hero_available:'Disponible pour de nouvelles missions',
+    hero_title:'Senior<br><span>Data Engineer</span><br><span class="dim">Azure &amp; Cloud</span>',
+    hero_desc:"Je conçois et développe des pipelines de données, des architectures ETL et des infrastructures cloud de qualité production — pour aider les organisations à transformer leurs données brutes en insights fiables.",
+    hero_cta1:'Voir les projets', hero_cta2:'Me contacter',
+    metric1:"Années d'expérience", metric2:'Cloud-Native', metric3:'Couverture Pipeline', metric4:'Infra as Code',
+    about_title:'Conçu pour les environnements <em>complexes</em>,<br>à forts enjeux',
+    about_c1_title:'Fiabilité bancaire',
+    about_c1_body:"Plus de 2 ans à concevoir des pipelines ETL dans un environnement bancaire hautement réglementé chez BNP Paribas Fortis — où qualité des données, traçabilité et conformité sont non négociables.",
+    about_c2_title:'Architecture cloud, de bout en bout',
+    about_c2_body:"De l'infrastructure gérée par Terraform sur Dev/QA/Prod aux transformations PySpark sur Databricks et aux dashboards Power BI — je maîtrise toute la chaîne.",
+    about_c3_title:'Approche sécurité avant tout',
+    about_c3_body:"J'intègre par défaut les Managed Identities, Linked Services et architectures sans mot de passe. Aucune credential codée en dur — essentiel dans les contextes financiers.",
+    projects_title:'Ce que je <em>construis</em>',
+    featured_badge:'★ Projet phare',
+    featured_desc:"Conception d'une architecture Medallion complète (Bronze / Silver / Gold) avec orchestration hybride et Infrastructure as Code — automatisant les flux bancaires de l'ingestion brute aux dashboards.",
+    deliv1:"Environnements complets (Dev/QA/Prod) déployés avec Terraform. Gestion automatisée des ressources et alertes budgétaires.",
+    deliv2_title:'Orchestration hybride', deliv2:"Workflows multi-cloud via Airflow dockerisé avec Managed Identities pour une intégration sécurisée sans mot de passe.",
+    deliv3_title:'Ingestion automatisée', deliv3:"Pipelines ADF avec déclencheurs événementiels pour ingérer les CSV bruts dans Bronze en temps réel.",
+    deliv4_title:'Transformation Spark', deliv4:"Jobs PySpark Databricks pour la logique métier Silver/Gold, avec reporting automatique via scripts Python.",
+    nb_tab0:'1 · Connexion', nb_tab1:'2 · Transformation', nb_tab2:'3 · Chargement',
+    nb_s1:'Étape 1 sur 3', nb_s2:'Étape 2 sur 3', nb_s3:'Étape 3 sur 3',
+    nb_prev:'← Préc.', nb_next:'Suiv. →',
+    tf_b0:'Fournisseur', tf_b1:'Groupe de ressources', tf_b2:'Stockage', tf_b3:'Data Factory', tf_b4:'Permissions', tf_b5:'Service lié',
+    tf_resources:'Ressources déclarées', tf_plan:'terraform plan',
+    aml_title:'Monitoring de modèles AML', aml_sub:'Complidata · Stage',
+    aml_body:"Recherche et implémentation du monitoring de dérive pour des modèles anti-blanchiment. Documentation des meilleures pratiques et présentation à des équipes pluridisciplinaires.",
+    next_title:'Votre prochain projet', next_sub:'Disponible pour missions',
+    next_body:"Vous souhaitez moderniser votre infrastructure data ou déployer une stack analytique cloud-native ? Parlons de ce que nous pouvons créer ensemble.",
+    next_cta:'Démarrer une conversation →',
+    exp_title:'<em>Éprouvé</em> en production',
+    bnp_sub:'Data Engineer · CDI', bnp_date:'Jan. 2023 → Présent',
+    bnp_body:"Conception, développement et maintenance de pipelines ETL alimentant un Data Warehouse structuré — dans un environnement bancaire hautement réglementé. Tests unitaires, CI/CD et revues de code.",
+    comp_sub:'Data Scientist Stagiaire · Tervuren',
+    comp_body:"Maintenance de modèles AML. Recherche sur la dérive de performance, synthèse académique et présentation à des équipes pluridisciplinaires.",
+    tag_banking:'Banque · Réglementé',
+    skills_title:'La stack <em>complète</em>',
+    sg1:'Cloud &amp; Infra', sg2:'Orchestration &amp; Pipelines', sg3:'Langages', sg4:'Analytique &amp; Viz', sg5:'Pratiques', sg6:'Versioning &amp; DevOps',
+    sk_cicd:'Déploiements CI/CD', sk_dw:'Conception Data Warehouse', sk_etl:'Conception pipelines ETL', sk_dq:'Qualité &amp; Monitoring', sk_cr:'Revues de code', sk_ut:'Tests unitaires', sk_ba:'Alertes budgétaires',
+    contact_title:'Construisons quelque chose de <em style="color:var(--accent);font-style:normal;">fiable</em>',
+    contact_desc:"Que vous ayez besoin d'un pipeline from scratch, d'un ETL modernisé ou d'une plateforme Azure complète — je suis ouvert aux missions ponctuelles et long terme.",
+    tag_freelance:'Freelance disponible', tag_remote:'Télétravail possible', tag_location:'Belgique &amp; Europe',
+    footer:'Construit avec précision · Portfolio Data Engineer · Bruxelles, Belgique'
+  },
+  nl: {
+    nav_about:'Over mij', nav_projects:'Projecten', nav_experience:'Ervaring', nav_skills:'Vaardigheden', nav_contact:'Contact',
+    hero_available:'Beschikbaar voor nieuwe opdrachten',
+    hero_title:'Senior<br><span>Data Engineer</span><br><span class="dim">Azure &amp; Cloud</span>',
+    hero_desc:"Ik ontwerp en bouw productie-klare datapipelines, ETL-architecturen en cloudinfrastructuur — zodat organisaties ruwe data omzetten in betrouwbare inzichten.",
+    hero_cta1:'Bekijk projecten', hero_cta2:'Neem contact op',
+    metric1:'Jaar ervaring', metric2:'Cloud-Native', metric3:'Pipeline-dekking', metric4:'Infra as Code',
+    about_title:'Gebouwd voor <em>complexe</em>,<br>veeleisende dataomgevingen',
+    about_c1_title:'Bankwaardige betrouwbaarheid',
+    about_c1_body:"Meer dan 2 jaar ETL-pipelines ontwerpen bij BNP Paribas Fortis — in een sterk gereguleerde bankomgeving waar datakwaliteit en compliance niet onderhandelbaar zijn.",
+    about_c2_title:'Cloudarchitectuur van A tot Z',
+    about_c2_body:"Van Terraform-beheerde infrastructuur over Dev/QA/Prod tot PySpark-transformaties en Power BI-dashboards — ik bezit de volledige datastack.",
+    about_c3_title:'Security-first aanpak',
+    about_c3_body:"Ik integreer standaard Managed Identities en wachtwoordloze architecturen. Geen hardgecodeerde credentials — essentieel in financiële contexten.",
+    projects_title:'Wat ik <em>bouw</em>',
+    featured_badge:'★ Uitgelicht project',
+    featured_desc:"Volledige Medallion-architectuur (Bronze / Silver / Gold) met hybride orkestratie en Infrastructure as Code — voor automatisering van bankgegevensworkflows.",
+    deliv1:"Volledige omgevingen (Dev/QA/Prod) met Terraform. Geautomatiseerd resourcebeheer en budgetwaarschuwingen.",
+    deliv2_title:'Hybride orkestratie', deliv2:"Multi-cloud workflows via gedockeriseerde Airflow met Managed Identities voor veilige integratie.",
+    deliv3_title:'Geautomatiseerde ingestie', deliv3:"ADF-pipelines met gebeurtenistriggers voor real-time ingestie van CSV's in Bronze.",
+    deliv4_title:'Spark-transformatie', deliv4:"PySpark Jobs voor Silver/Gold-bedrijfslogica met geautomatiseerde statusrapportage.",
+    nb_tab0:'1 · Verbinding', nb_tab1:'2 · Transformatie', nb_tab2:'3 · Laden',
+    nb_s1:'Stap 1 van 3', nb_s2:'Stap 2 van 3', nb_s3:'Stap 3 van 3',
+    nb_prev:'← Vorige', nb_next:'Volgende →',
+    tf_b0:'Provider', tf_b1:'Resourcegroep', tf_b2:'Opslag', tf_b3:'Data Factory', tf_b4:'Rechten', tf_b5:'Gekoppelde service',
+    tf_resources:'Gedeclareerde resources', tf_plan:'terraform plan',
+    aml_title:'AML-modelmonitoring', aml_sub:'Complidata · Stage',
+    aml_body:"Onderzoek naar prestatiedrift van antiwitwasmodellen. Best practices gedocumenteerd en gepresenteerd aan multidisciplinaire teams.",
+    next_title:'Uw volgend project', next_sub:'Beschikbaar voor opdrachten',
+    next_body:"Wilt u uw data-infrastructuur moderniseren of een cloud-native analysestack implementeren? Laten we praten.",
+    next_cta:'Start een gesprek →',
+    exp_title:'<em>Bewezen</em> in productie',
+    bnp_sub:'Data Engineer · Voltijds', bnp_date:'Jan. 2023 → Heden',
+    bnp_body:"Ontwerpen en onderhouden van ETL-pipelines voor een gestructureerd Data Warehouse — in een sterk gereguleerde bankomgeving. Unittests, CI/CD en codebeoordelingen.",
+    comp_sub:'Data Scientist Stagiair · Tervuren',
+    comp_body:"Onderhoud van AML-modellen. Onderzoek naar prestatiedrift en presentaties aan multidisciplinaire teams.",
+    tag_banking:'Bankieren · Gereguleerd',
+    skills_title:'De volledige <em>stack</em>',
+    sg1:'Cloud &amp; Infra', sg2:'Orkestratie &amp; Pipelines', sg3:'Talen', sg4:'Analyse &amp; Visualisatie', sg5:'Praktijken', sg6:'Versiebeheer &amp; DevOps',
+    sk_cicd:'CI/CD-implementaties', sk_dw:'Data Warehouse-ontwerp', sk_etl:'ETL-pipelineontwerp', sk_dq:'Datakwaliteit &amp; monitoring', sk_cr:'Codebeoordelingen', sk_ut:'Unittests', sk_ba:'Budgetwaarschuwingen',
+    contact_title:'Laten we iets <em style="color:var(--accent);font-style:normal;">betrouwbaars</em> bouwen',
+    contact_desc:"Of u nu een pipeline from scratch nodig heeft of een volledig Azure-platform — ik sta open voor project- en langetermijnopdrachten.",
+    tag_freelance:'Freelance beschikbaar', tag_remote:'Telewerk mogelijk', tag_location:'België &amp; Europa',
+    footer:'Gebouwd met precisie · Data Engineer Portfolio · Brussel, België'
+  }
+};
+
+var currentLang = 'en';
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang); });
+  document.documentElement.lang = lang;
+  var all = document.querySelectorAll('[data-i18n],[data-i18n-html]');
+  all.forEach(function(el) { el.classList.add('lang-fade'); });
+  setTimeout(function() {
+    var t = T[lang];
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var k = el.getAttribute('data-i18n');
+      if (t[k] != null) { var d = document.createElement('textarea'); d.innerHTML = t[k]; el.textContent = d.value; }
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+      var k = el.getAttribute('data-i18n-html');
+      if (t[k] != null) el.innerHTML = t[k];
+    });
+    all.forEach(function(el) { el.classList.remove('lang-fade'); });
+  }, 150);
+}
+
+/* ===================================================
+   SCROLL REVEAL
+=================================================== */
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e, i) {
+    if (e.isIntersecting) { setTimeout(function() { e.target.classList.add('visible'); }, i * 80); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+/* ===================================================
+   ACTIVE NAV
+=================================================== */
+window.addEventListener('scroll', function() {
+  var cur = '';
+  document.querySelectorAll('section[id]').forEach(function(s) { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+  document.querySelectorAll('.nav-links a').forEach(function(a) { a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--accent)' : ''; });
+});
+</script>
+</body>
+</html>
