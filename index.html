@@ -234,6 +234,30 @@ footer{text-align:center;padding:2rem;font-size:.65rem;color:var(--muted);border
   .metrics{grid-template-columns:repeat(2,1fr);}
   .tf-layout{grid-template-columns:1fr;}.tf-side{display:none;}
 }
+
+  /* ── CONTACT FORM ── */
+  .cf-form { width:100%; margin-bottom:1.5rem; display:flex; flex-direction:column; gap:.8rem; }
+  .cf-row { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+  .cf-form input, .cf-form textarea {
+    width:100%; background:var(--surface2); border:1px solid var(--border);
+    border-radius:6px; padding:.75rem 1rem; font-family:'JetBrains Mono',monospace;
+    font-size:.78rem; color:var(--text); outline:none; transition:border-color .2s;
+  }
+  .cf-form input::placeholder, .cf-form textarea::placeholder { color:var(--muted); }
+  .cf-form input:focus, .cf-form textarea:focus { border-color:var(--accent); }
+  .cf-form textarea { resize:vertical; min-height:110px; }
+  .cf-submit {
+    background:var(--accent); color:var(--bg); border:none; border-radius:6px;
+    padding:.8rem 2rem; font-family:'JetBrains Mono',monospace; font-size:.78rem;
+    font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    cursor:pointer; transition:all .2s; align-self:center;
+  }
+  .cf-submit:hover { background:#00ffcc; transform:translateY(-2px); }
+  .cf-submit:disabled { opacity:.5; cursor:default; transform:none; }
+  .cf-status { font-size:.75rem; text-align:center; min-height:1.2rem; }
+  .cf-status.ok  { color:var(--accent); }
+  .cf-status.err { color:var(--accent3); }
+  @media(max-width:600px){ .cf-row { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -714,7 +738,15 @@ df_gold.write \
     <span class="section-tag" style="display:block;text-align:center;" data-i18n="nav_contact">Contact</span>
     <div class="contact-title" data-i18n-html="contact_title">Let's build something <em style="color:var(--accent);font-style:normal;">reliable</em></div>
     <p class="contact-desc" data-i18n="contact_desc">Whether you need a data pipeline built from scratch, an existing ETL modernised, or a full Azure data platform deployed — I'm open to project-based and long-term engagements.</p>
-    <a href="/cdn-cgi/l/email-protection#6a1e02030f1818134407081819022a0d070b030644090507" class="contact-email">Contact</a>
+    <form class="cf-form" id="contact-form" action="https://formspree.io/f/meelndpz" method="POST">
+      <div class="cf-row">
+        <input type="text"  name="name"    required placeholder="" data-i18n-ph="form_name" />
+        <input type="email" name="email"   required placeholder="" data-i18n-ph="form_email" />
+      </div>
+      <textarea name="message" required placeholder="" data-i18n-ph="form_msg"></textarea>
+      <button type="submit" class="cf-submit" data-i18n="form_send">Send message</button>
+      <p class="cf-status" id="cf-status"></p>
+    </form>
     <div class="card-tags" style="justify-content:center;">
       <span class="tag tag-green" data-i18n="tag_freelance">Open to Freelance</span>
       <span class="tag tag-blue" data-i18n="tag_remote">Remote-friendly</span>
@@ -807,6 +839,8 @@ var T = {
     contact_title:'Let\'s build something <em style="color:var(--accent);font-style:normal;">reliable</em>',
     contact_desc:"Whether you need a data pipeline built from scratch, an existing ETL modernised, or a full Azure data platform deployed — I'm open to project-based and long-term engagements.",
     tag_freelance:'Open to Freelance', tag_remote:'Remote-friendly', tag_location:'Belgium',
+    form_name:'Your name', form_email:'Your email', form_msg:'Your message…', form_send:'Send message',
+    form_ok:'Message sent! I will get back to you shortly.', form_err:'Something went wrong. Please try again.',
     footer:'Built with precision · Data Engineer Portfolio · Brussels, Belgium'
   },
   fr: {
@@ -852,6 +886,8 @@ var T = {
     contact_title:'Construisons quelque chose de <em style="color:var(--accent);font-style:normal;">fiable</em>',
     contact_desc:"Que vous ayez besoin d'un pipeline from scratch, d'un ETL modernisé ou d'une plateforme Azure complète — je suis ouvert aux missions ponctuelles et long terme.",
     tag_freelance:'Freelance disponible', tag_remote:'Télétravail possible', tag_location:'Belgique',
+    form_name:'Votre nom', form_email:'Votre email', form_msg:'Votre message…', form_send:'Envoyer le message',
+    form_ok:'Message envoyé ! Je vous répondrai rapidement.', form_err:'Une erreur est survenue. Veuillez réessayer.',
     footer:'Construit avec précision · Portfolio Data Engineer · Bruxelles, Belgique'
   },
   nl: {
@@ -896,7 +932,9 @@ var T = {
     sk_cicd:'CI/CD-implementaties', sk_dw:'Data Warehouse-ontwerp', sk_etl:'ETL-pipelineontwerp', sk_dq:'Datakwaliteit &amp; monitoring', sk_cr:'Codebeoordelingen', sk_ut:'Unittests', sk_ba:'Budgetwaarschuwingen',
     contact_title:'Laten we iets <em style="color:var(--accent);font-style:normal;">betrouwbaars</em> bouwen',
     contact_desc:"Of u nu een pipeline from scratch nodig heeft of een volledig Azure-platform — ik sta open voor project- en langetermijnopdrachten.",
-    tag_freelance:'Freelance beschikbaar', tag_remote:'Telewerk mogelijk', tag_location:'België &amp; Europa',
+    tag_freelance:'Freelance beschikbaar', tag_remote:'Telewerk mogelijk', tag_location:'België',
+    form_name:'Uw naam', form_email:'Uw e-mail', form_msg:'Uw bericht…', form_send:'Bericht versturen',
+    form_ok:'Bericht verzonden! Ik neem snel contact met u op.', form_err:'Er is iets misgegaan. Probeer het opnieuw.',
     footer:'Gebouwd met precisie · Data Engineer Portfolio · Brussel, België'
   }
 };
@@ -941,6 +979,61 @@ window.addEventListener('scroll', function() {
   document.querySelectorAll('section[id]').forEach(function(s) { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
   document.querySelectorAll('.nav-links a').forEach(function(a) { a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--accent)' : ''; });
 });
+
+/* ===================================================
+   CONTACT FORM (Formspree)
+=================================================== */
+function updateFormPlaceholders(lang) {
+  var t = T[lang];
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n-ph');
+    if (t[k]) el.placeholder = t[k];
+  });
+}
+
+var form = document.getElementById('contact-form');
+if (form) {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn    = form.querySelector('.cf-submit');
+    var status = document.getElementById('cf-status');
+    btn.disabled = true;
+    status.textContent = '';
+    status.className = 'cf-status';
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(res) {
+      if (res.ok) {
+        status.textContent = T[currentLang].form_ok;
+        status.className = 'cf-status ok';
+        form.reset();
+      } else {
+        status.textContent = T[currentLang].form_err;
+        status.className = 'cf-status err';
+      }
+      btn.disabled = false;
+    })
+    .catch(function() {
+      status.textContent = T[currentLang].form_err;
+      status.className = 'cf-status err';
+      btn.disabled = false;
+    });
+  });
+}
+
+// Hook placeholder updates into setLang
+var _origSetLang = setLang;
+setLang = function(lang) {
+  _origSetLang(lang);
+  setTimeout(function() { updateFormPlaceholders(lang); }, 160);
+};
+
+// Init placeholders on load
+updateFormPlaceholders('en');
+
 </script>
 </body>
 </html>
