@@ -398,329 +398,319 @@ footer{text-align:center;padding:2rem;font-size:.65rem;color:var(--muted);border
 
   <div class="featured-card reveal">
     <div class="featured-badge" data-i18n="featured_badge">★ Featured Project</div>
-    <div class="featured-title">Azure End-to-End Automated Pipeline</div>
-    <p class="card-body" style="max-width:700px;" data-i18n="featured_desc">Designed and implemented a complete Medallion architecture (Bronze / Silver / Gold) with hybrid orchestration and full Infrastructure as Code — automating banking data workflows from raw ingestion to interactive dashboards.</p>
+    <div class="featured-title">Telecom Data Lakehouse Platform</div>
+    <p class="card-body" style="max-width:700px;" data-i18n="featured_desc">End-to-end modern data platform on Azure — from Terraform-provisioned infrastructure to dbt-powered Gold analytics, orchestrated by Airflow and governed by Databricks Unity Catalog.</p>
+
     <div class="deliverables">
-      <div class="deliverable"><div class="deliverable-title">⬡ IaC &amp; DevOps</div><div class="deliverable-body" data-i18n="deliv1">Full environments (Dev/QA/Prod) deployed with Terraform. Automated resource lifecycle and Budget Alerts for cost optimisation.</div></div>
-      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv2_title">Hybrid Orchestration</span></div><div class="deliverable-body" data-i18n="deliv2">Multi-cloud workflows piloted via Dockerized Airflow with Managed Identities for passwordless, secure integration.</div></div>
-      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv3_title">Automated Ingestion</span></div><div class="deliverable-body" data-i18n="deliv3">ADF pipelines with Event-Based Triggers ingest raw CSVs into Bronze in real-time, monitored continuously by Airflow.</div></div>
-      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv4_title">Spark Transformation</span></div><div class="deliverable-body" data-i18n="deliv4">Databricks PySpark Jobs implement Silver/Gold business logic with automated status reporting via Python scripts.</div></div>
+      <div class="deliverable"><div class="deliverable-title">⬡ IaC &amp; Governance</div><div class="deliverable-body" data-i18n="deliv1">Azure resources and Databricks Workspace deployed with Terraform. Unity Catalog ensures centralised access control, data lineage, and a secretless Managed Identity architecture.</div></div>
+      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv2_title">Airflow Orchestration</span></div><div class="deliverable-body" data-i18n="deliv2">Docker-based Airflow DAG coordinates the full pipeline — triggering Databricks jobs for Bronze/Silver ingestion, then running dbt for Gold transformation.</div></div>
+      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv3_title">Spark ELT (Bronze &amp; Silver)</span></div><div class="deliverable-body" data-i18n="deliv3">PySpark notebooks ingest raw telecom data into Bronze, then type, filter, deduplicate and cast categorical values (Churn → numeric) into the Silver layer.</div></div>
+      <div class="deliverable"><div class="deliverable-title">⬡ <span data-i18n="deliv4_title">dbt Gold + Quality Tests</span></div><div class="deliverable-body" data-i18n="deliv4">dbt models compute Churn Rate KPIs per contract type. Automated schema tests (not_null, accepted_values) enforce data integrity before exposure to BI tools.</div></div>
     </div>
+
     <div class="card-tags" style="margin-top:1.5rem;">
-      <span class="tag tag-green">Azure Data Factory</span><span class="tag tag-green">Databricks</span>
-      <span class="tag tag-blue">Terraform</span><span class="tag tag-blue">Airflow</span>
-      <span class="tag tag-gold">Power BI</span><span class="tag tag-orange">PySpark</span>
-      <span class="tag tag-green">Medallion Architecture</span><span class="tag tag-blue">Docker</span>
+      <span class="tag tag-green">Azure Databricks</span>
+      <span class="tag tag-green">Unity Catalog</span>
+      <span class="tag tag-blue">Terraform</span>
+      <span class="tag tag-blue">Apache Airflow</span>
+      <span class="tag tag-orange">dbt</span>
+      <span class="tag tag-orange">PySpark</span>
+      <span class="tag tag-gold">Delta Lake</span>
+      <span class="tag tag-blue">Docker</span>
+      <span class="tag tag-green">Medallion Architecture</span>
     </div>
 
     <!-- ═══════════════ CODE VIEWERS ═══════════════ -->
     <div class="code-viewers">
-
-      <!-- File tab switcher -->
       <div class="file-tabs">
-        <div class="file-tab active" onclick="switchFile('nb')">
+        <div class="file-tab active" onclick="switchFile('af')">
+          <span class="ftdot" style="background:linear-gradient(135deg,#017cee,#00c7d4);"></span>
+          <span class="ftlabel">airflow-telecom.py</span>
+        </div>
+        <div class="file-tab" onclick="switchFile('br')">
+          <span class="ftdot" style="background:linear-gradient(135deg,#cd7f32,#e8a44a);"></span>
+          <span class="ftlabel">01_Load_Bronze.ipynb</span>
+        </div>
+        <div class="file-tab" onclick="switchFile('si')">
+          <span class="ftdot" style="background:linear-gradient(135deg,#aaa,#ddd);"></span>
+          <span class="ftlabel">02_Transform_Silver.ipynb</span>
+        </div>
+        <div class="file-tab" onclick="switchFile('dbt')">
           <span class="ftdot" style="background:linear-gradient(135deg,#ff6b35,#f7c948);"></span>
-          <span class="ftlabel">Transformation_Gold_Spark.ipynb</span>
+          <span class="ftlabel">avg_churn_by_contract.sql</span>
         </div>
         <div class="file-tab" onclick="switchFile('tf')">
           <span class="ftdot" style="background:linear-gradient(135deg,#7b42bc,#5c4ee8);"></span>
-          <span class="ftlabel">main.tf</span>
+          <span class="ftlabel">dbt schema / sources</span>
         </div>
       </div>
 
-      <!-- ─── PANEL: NOTEBOOK ─── -->
-      <div class="file-panel active" id="panel-nb">
+      <!-- ─── PANEL: AIRFLOW ─── -->
+      <div class="file-panel active" id="panel-af">
         <div class="nb-topbar">
           <div class="nb-info-row">
-            <div class="nb-icon">db</div>
-            <div><div class="nb-filename">Transformation_Gold_Spark.ipynb</div><div class="nb-meta">Databricks · PySpark · Python 3 · Silver → Gold</div></div>
-          </div>
-          <div class="nb-tabs">
-            <div class="nb-tab active" onclick="showStep(0)" data-i18n="nb_tab0">1 · Connection</div>
-            <div class="nb-tab" onclick="showStep(1)" data-i18n="nb_tab1">2 · Transformation</div>
-            <div class="nb-tab" onclick="showStep(2)" data-i18n="nb_tab2">3 · Load</div>
+            <div class="nb-icon" style="background:linear-gradient(135deg,#017cee,#00c7d4);color:#fff;">af</div>
+            <div><div class="nb-filename">airflow-telecom.py</div><div class="nb-meta">Apache Airflow · DAG · telecom_churn_pipeline · @daily</div></div>
           </div>
         </div>
         <div class="nb-viewer">
+          <div class="nb-step active" id="af-step-0">
+            <div class="nb-cell-bar"><span class="nb-cell-badge code">dag</span><span class="nb-cell-num">telecom_churn_pipeline</span></div>
+            <div class="nb-code-content"><span class="kw">from</span> airflow <span class="kw">import</span> DAG
+<span class="kw">from</span> airflow.providers.databricks.operators.databricks <span class="kw">import</span> <span class="fn">DatabricksRunNowOperator</span>
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+<span class="kw">from</span> airflow.operators.bash <span class="kw">import</span> <span class="fn">BashOperator</span>
 
-          <!-- Step 0 -->
-          <div class="nb-step active" id="nb-step-0">
-            <div class="nb-cell-bar"><span class="nb-cell-badge md">markdown</span><span class="nb-cell-num">[ ]</span></div>
-            <div class="nb-md-content">## 1. Connection to Azure Data Lake and file extraction</div>
+<span class="kw">with</span> <span class="fn">DAG</span>(
+    dag_id=<span class="str">'telecom_churn_pipeline'</span>,
+    start_date=<span class="fn">datetime</span>(<span class="num">2026</span>, <span class="num">1</span>, <span class="num">1</span>),
+    schedule_interval=<span class="str">'@daily'</span>,
+    catchup=<span class="kw">False</span>,
+    max_active_runs=<span class="num">1</span>
+) <span class="kw">as</span> dag:
+
+    <span class="cm"># 1. Ingestion — trigger Databricks Bronze notebook</span>
+    task_bronze = <span class="fn">DatabricksRunNowOperator</span>(
+        task_id=<span class="str">'ingest_raw_data'</span>,
+        databricks_conn_id=<span class="str">'databricks_default'</span>,
+        job_id=<span class="num">123</span>  <span class="cm"># Workspace Job ID</span>
+    )
+
+    <span class="cm"># 2. Cleaning — trigger Databricks Silver notebook</span>
+    task_silver = <span class="fn">DatabricksRunNowOperator</span>(
+        task_id=<span class="str">'clean_and_format'</span>,
+        databricks_conn_id=<span class="str">'databricks_default'</span>,
+        job_id=<span class="num">456</span>
+    )
+
+    <span class="cm"># 3. Gold analytics — run dbt models</span>
+    run_dbt_gold = <span class="fn">BashOperator</span>(
+        task_id=<span class="str">'run_dbt_gold'</span>,
+        bash_command=<span class="str">'cd path/to/dbt/file &amp;&amp; dbt run'</span>,
+        env={<span class="str">'DBT_PROFILES_DIR'</span>: <span class="str">'path/to/.dbt'</span>}
+    )
+
+    <span class="cm"># Pipeline dependency chain</span>
+    task_bronze &gt;&gt; task_silver &gt;&gt; run_dbt_gold</div>
+            <div class="nb-output">
+              <div class="nb-output-bar">Pipeline DAG — 3 tasks · @daily schedule</div>
+              <div style="padding:.8rem 1.2rem; display:flex; align-items:center; gap:0; font-size:.72rem;">
+                <div style="background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:4px;padding:.4rem .9rem;color:var(--accent);">ingest_raw_data</div>
+                <div style="color:var(--muted);padding:0 .5rem;">──▶</div>
+                <div style="background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.3);border-radius:4px;padding:.4rem .9rem;color:var(--accent2);">clean_and_format</div>
+                <div style="color:var(--muted);padding:0 .5rem;">──▶</div>
+                <div style="background:rgba(247,129,102,.1);border:1px solid rgba(247,129,102,.3);border-radius:4px;padding:.4rem .9rem;color:var(--accent3);">run_dbt_gold</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-af -->
+
+
+      <!-- ─── PANEL: BRONZE ─── -->
+      <div class="file-panel" id="panel-br">
+        <div class="nb-topbar">
+          <div class="nb-info-row">
+            <div class="nb-icon" style="background:linear-gradient(135deg,#cd7f32,#e8a44a);color:#000;">db</div>
+            <div><div class="nb-filename">01_Load_Bronze.ipynb</div><div class="nb-meta">Databricks · PySpark · Raw CSV → Bronze Delta · ADLS Gen2</div></div>
+          </div>
+        </div>
+        <div class="nb-viewer">
+          <div class="nb-step active">
             <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[1]</span></div>
-            <div class="nb-code-content"><span class="cm"># 1. Security: give account key to Spark</span>
-spark.conf.<span class="fn">set</span>(
-    <span class="str">""</span>,  <span class="cm"># account.key</span>
-    <span class="str">""</span>   <span class="cm"># key</span>
-)
+            <div class="nb-code-content"><span class="cm"># Storage account config</span>
+storage_account = <span class="str">"&lt;storage_account&gt;"</span>
+path = <span class="fn">f</span><span class="str">"abfss://&lt;container&gt;@&lt;storage_account&gt;.dfs.core.windows.net/bronze/"</span>
 
-<span class="cm"># 2. Path to file in datalake container</span>
-path_bronze = <span class="str">""</span>  <span class="cm"># path to data lake container</span></div>
-            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[2]</span></div>
-            <div class="nb-code-content"><span class="cm"># 3. Ask Spark to read the CSV and infer column types</span>
-df = spark.read.<span class="fn">format</span>(<span class="str">"csv"</span>) \
-    .<span class="fn">option</span>(<span class="str">"header"</span>, <span class="str">"true"</span>) \
-    .<span class="fn">option</span>(<span class="str">"inferSchema"</span>, <span class="str">"true"</span>) \
-    .<span class="fn">load</span>(path_bronze)
+<span class="cm"># Read CSV directly from ADLS Gen2 via ABFSS</span>
+df = spark.read.<span class="fn">format</span>(<span class="str">"csv"</span>)     .<span class="fn">option</span>(<span class="str">"header"</span>, <span class="str">"true"</span>)     .<span class="fn">load</span>(path)
 
-<span class="cm"># 4. Display first 10 rows</span>
-<span class="fn">display</span>(df.<span class="fn">limit</span>(<span class="num">10</span>))</div>
+<span class="fn">display</span>(df.<span class="fn">limit</span>(<span class="num">5</span>))</div>
             <div class="nb-output">
-              <div class="nb-output-bar">Output — DataFrame (10 rows × 23 columns)</div>
+              <div class="nb-output-bar">Output — Bronze DataFrame (5 rows × 10 columns)</div>
               <div class="nb-table-wrap">
                 <table class="nb-table">
-                  <thead><tr><th>CLIENTNUM</th><th>Attrition_Flag</th><th>Customer_Age</th><th>Gender</th><th>Income_Category</th><th>Card_Category</th><th>Credit_Limit</th><th>Total_Trans_Amt</th><th>Avg_Utilization_Ratio</th></tr></thead>
+                  <thead><tr><th>_c0</th><th>CustomerID</th><th>Gender</th><th>SeniorCitizen</th><th>Tenure</th><th>MonthlyCharges</th><th>Contract</th><th>PaymentMethod</th><th>Churn</th><th>TotalCharges</th></tr></thead>
                   <tbody>
-                    <tr><td>768805383</td><td>Existing Customer</td><td>45</td><td>M</td><td>$60K - $80K</td><td>Blue</td><td>12691.0</td><td>1144</td><td>0.061</td></tr>
-                    <tr><td>818770008</td><td>Existing Customer</td><td>49</td><td>F</td><td>Less than $40K</td><td>Blue</td><td>8256.0</td><td>1291</td><td>0.105</td></tr>
-                    <tr><td>713982108</td><td>Existing Customer</td><td>51</td><td>M</td><td>$80K - $120K</td><td>Blue</td><td>3418.0</td><td>1887</td><td>0.0</td></tr>
-                    <tr><td>769911858</td><td>Existing Customer</td><td>40</td><td>F</td><td>Less than $40K</td><td>Blue</td><td>3313.0</td><td>1171</td><td>0.76</td></tr>
-                    <tr><td>709106358</td><td>Existing Customer</td><td>40</td><td>M</td><td>$60K - $80K</td><td>Blue</td><td>4716.0</td><td>816</td><td>0.0</td></tr>
-                    <tr><td>810347208</td><td>Existing Customer</td><td>51</td><td>M</td><td>$120K +</td><td>Gold</td><td>34516.0</td><td>1330</td><td>0.066</td></tr>
-                    <tr><td>818906208</td><td>Existing Customer</td><td>32</td><td>M</td><td>$60K - $80K</td><td>Silver</td><td>29081.0</td><td>1538</td><td>0.048</td></tr>
-                    <tr><td>710930508</td><td>Existing Customer</td><td>37</td><td>M</td><td>$60K - $80K</td><td>Blue</td><td>22352.0</td><td>1350</td><td>0.113</td></tr>
-                    <tr><td>719661558</td><td>Existing Customer</td><td>48</td><td>M</td><td>$80K - $120K</td><td>Blue</td><td>11656.0</td><td>1441</td><td>0.144</td></tr>
-                    <tr><td>713061558</td><td>Existing Customer</td><td>44</td><td>M</td><td>$40K - $60K</td><td>Blue</td><td>4010.0</td><td>1088</td><td>0.311</td></tr>
+                    <tr><td>0</td><td>0</td><td>Male</td><td>0</td><td>55</td><td>111.88</td><td>Two year</td><td>Mailed check</td><td>0</td><td>6153.4</td></tr>
+                    <tr><td>1</td><td>1</td><td>Female</td><td>1</td><td>36</td><td>58.7</td><td>Two year</td><td>Electronic check</td><td>0</td><td>2113.2</td></tr>
+                    <tr><td>2</td><td>2</td><td>Male</td><td>0</td><td>37</td><td>118.86</td><td>One year</td><td>Electronic check</td><td>0</td><td>4397.82</td></tr>
+                    <tr><td>3</td><td>3</td><td>Male</td><td>1</td><td>14</td><td>96.14</td><td>Month-to-month</td><td>Mailed check</td><td style="color:var(--accent3);">1</td><td>1345.96</td></tr>
+                    <tr><td>4</td><td>4</td><td>Male</td><td>1</td><td>27</td><td>28.05</td><td>Two year</td><td>Mailed check</td><td>0</td><td>757.35</td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            <div class="nb-step-footer">
-              <span class="nb-step-label" data-i18n="nb_s1">Step 1 of 3</span>
-              <div class="nb-nav-btns">
-                <button class="nb-nav-btn" disabled data-i18n="nb_prev">← Prev</button>
-                <button class="nb-nav-btn" onclick="showStep(1)" data-i18n="nb_next">Next →</button>
-              </div>
-            </div>
           </div>
+        </div>
+      </div><!-- /panel-br -->
 
-          <!-- Step 1 -->
-          <div class="nb-step" id="nb-step-1">
-            <div class="nb-cell-bar"><span class="nb-cell-badge md">markdown</span><span class="nb-cell-num">[ ]</span></div>
-            <div class="nb-md-content">## 2. Transformation</div>
-            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[3]</span></div>
-            <div class="nb-code-content"><span class="kw">from</span> pyspark.sql.functions <span class="kw">import</span> <span class="fn">col</span>, <span class="fn">when</span>
-
-<span class="cm"># Create 'Senior' column: 1 if Customer_Age >= 60, else 0</span>
-df_gold = df.<span class="fn">withColumn</span>(
-    <span class="str">"EstSenior"</span>,
-    <span class="fn">when</span>(<span class="fn">col</span>(<span class="str">"Customer_Age"</span>) >= <span class="num">60</span>, <span class="num">1</span>).<span class="fn">otherwise</span>(<span class="num">0</span>)
-)
-
-<span class="cm"># Verify the result</span>
-<span class="fn">display</span>(df_gold.<span class="fn">select</span>(<span class="str">"CLIENTNUM"</span>, <span class="str">"Customer_Age"</span>, <span class="str">"EstSenior"</span>).<span class="fn">limit</span>(<span class="num">10</span>))</div>
-            <div class="nb-output">
-              <div class="nb-output-bar">Output — Gold DataFrame with derived column EstSenior</div>
-              <div class="nb-table-wrap">
-                <table class="nb-table">
-                  <thead><tr><th>CLIENTNUM</th><th>Customer_Age</th><th>EstSenior</th></tr></thead>
-                  <tbody>
-                    <tr><td>768805383</td><td>45</td><td>0</td></tr><tr><td>818770008</td><td>49</td><td>0</td></tr>
-                    <tr><td>713982108</td><td>51</td><td>0</td></tr><tr><td>769911858</td><td>40</td><td>0</td></tr>
-                    <tr><td>709106358</td><td>40</td><td>0</td></tr><tr><td>810347208</td><td>51</td><td>0</td></tr>
-                    <tr><td>818906208</td><td>32</td><td>0</td></tr><tr><td>710930508</td><td>37</td><td>0</td></tr>
-                    <tr><td>719661558</td><td>48</td><td>0</td></tr><tr><td>713061558</td><td>44</td><td>0</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="nb-step-footer">
-              <span class="nb-step-label" data-i18n="nb_s2">Step 2 of 3</span>
-              <div class="nb-nav-btns">
-                <button class="nb-nav-btn" onclick="showStep(0)" data-i18n="nb_prev">← Prev</button>
-                <button class="nb-nav-btn" onclick="showStep(2)" data-i18n="nb_next">Next →</button>
-              </div>
-            </div>
+      <!-- ─── PANEL: SILVER ─── -->
+      <div class="file-panel" id="panel-si">
+        <div class="nb-topbar">
+          <div class="nb-info-row">
+            <div class="nb-icon" style="background:linear-gradient(135deg,#aaa,#ddd);color:#000;">db</div>
+            <div><div class="nb-filename">02_Transform_Silver.ipynb</div><div class="nb-meta">Databricks · PySpark · Bronze → Silver Delta · Unity Catalog</div></div>
           </div>
+        </div>
+        <div class="nb-viewer">
+          <div class="nb-step active">
+            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[1]</span></div>
+            <div class="nb-code-content"><span class="kw">from</span> pyspark.sql.functions <span class="kw">import</span> <span class="fn">col</span>
 
-          <!-- Step 2 -->
-          <div class="nb-step" id="nb-step-2">
-            <div class="nb-cell-bar"><span class="nb-cell-badge md">markdown</span><span class="nb-cell-num">[ ]</span></div>
-            <div class="nb-md-content">## 3. Load</div>
-            <div class="nb-cell-bar"><span class="nb-cell-badge code">code</span><span class="nb-cell-num">[4]</span></div>
-            <div class="nb-code-content"><span class="cm"># Path to Gold zone in data lake</span>
-path_gold = <span class="str">""</span>
+<span class="cm"># --- CONFIGURATION ---</span>
+storage_account = <span class="str">"&lt;storage_account&gt;"</span>
+container_name  = <span class="str">"telecom-data"</span>
 
-<span class="cm"># Save as Delta format for high-performance analytics</span>
-df_gold.write \
-    .<span class="fn">format</span>(<span class="str">"delta"</span>) \
-    .<span class="fn">mode</span>(<span class="str">"overwrite"</span>) \
-    .<span class="fn">save</span>(path_gold)
+<span class="cm"># --- 1. READ BRONZE LAYER ---</span>
+path_bronze = <span class="fn">f</span><span class="str">"abfss://&lt;container&gt;@&lt;storage_account&gt;.dfs.core.windows.net/bronze/"</span>
+df_raw = spark.read.<span class="fn">format</span>(<span class="str">"csv"</span>).<span class="fn">option</span>(<span class="str">"header"</span>, <span class="str">"true"</span>).<span class="fn">load</span>(path_bronze)
 
-<span class="fn">print</span>(<span class="str">"Bravo ! Les données transformées sont enregistrées dans la zone Gold."</span>)</div>
+<span class="cm"># --- 2. CLEANING &amp; CASTING ---</span>
+<span class="cm"># CSV imports everything as String — cast to correct types</span>
+df_silver = df_raw     .<span class="fn">withColumn</span>(<span class="str">"TotalCharges"</span>,   <span class="fn">col</span>(<span class="str">"TotalCharges"</span>).<span class="fn">cast</span>(<span class="str">"double"</span>))     .<span class="fn">withColumn</span>(<span class="str">"MonthlyCharges"</span>, <span class="fn">col</span>(<span class="str">"MonthlyCharges"</span>).<span class="fn">cast</span>(<span class="str">"double"</span>))     .<span class="fn">withColumn</span>(<span class="str">"tenure"</span>,         <span class="fn">col</span>(<span class="str">"tenure"</span>).<span class="fn">cast</span>(<span class="str">"int"</span>))     .<span class="fn">withColumn</span>(<span class="str">"SeniorCitizen"</span>,  <span class="fn">col</span>(<span class="str">"SeniorCitizen"</span>).<span class="fn">cast</span>(<span class="str">"int"</span>))     .<span class="fn">withColumn</span>(<span class="str">"Churn"</span>,          <span class="fn">col</span>(<span class="str">"Churn"</span>).<span class="fn">cast</span>(<span class="str">"int"</span>))
+
+<span class="cm"># Drop rows where TotalCharges is null (cannot be analysed)</span>
+df_silver = df_silver.<span class="fn">filter</span>(<span class="fn">col</span>(<span class="str">"TotalCharges"</span>).<span class="fn">isNotNull</span>())
+
+<span class="cm"># --- 3. WRITE TO SILVER (Unity Catalog) ---</span>
+full_table_name = <span class="str">"&lt;catalog&gt;.silver.customers_cleaned"</span>
+
+spark.sql(<span class="str">"CREATE SCHEMA IF NOT EXISTS &lt;catalog&gt;.silver"</span>)
+
+df_silver.write.<span class="fn">format</span>(<span class="str">"delta"</span>)     .<span class="fn">mode</span>(<span class="str">"overwrite"</span>)     .<span class="fn">saveAsTable</span>(full_table_name)
+
+<span class="fn">print</span>(<span class="str">"Succès : Les données nettoyées sont maintenant stockées au format Delta dans le dossier Silver !"</span>)</div>
             <div class="nb-output">
               <div class="nb-output-bar">stdout</div>
-              <div class="nb-stdout">Bravo ! Les données transformées sont enregistrées dans la zone Gold.</div>
+              <div class="nb-stdout">Succès : Les données nettoyées sont maintenant stockées au format Delta dans le dossier Silver !</div>
             </div>
-            <div class="nb-step-footer">
-              <span class="nb-step-label" data-i18n="nb_s3">Step 3 of 3</span>
-              <div class="nb-nav-btns">
-                <button class="nb-nav-btn" onclick="showStep(1)" data-i18n="nb_prev">← Prev</button>
-                <button class="nb-nav-btn" disabled data-i18n="nb_next">Next →</button>
+          </div>
+        </div>
+      </div><!-- /panel-si -->
+
+      <!-- ─── PANEL: DBT SQL ─── -->
+      <div class="file-panel" id="panel-dbt">
+        <div class="nb-topbar">
+          <div class="nb-info-row">
+            <div class="nb-icon" style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:#000;">dbt</div>
+            <div><div class="nb-filename">avg_churn_by_contract.sql</div><div class="nb-meta">dbt · Gold model · materialized as table · Churn Rate KPI</div></div>
+          </div>
+        </div>
+        <div class="nb-viewer">
+          <div class="nb-step active">
+            <div class="nb-cell-bar"><span class="nb-cell-badge code">model</span><span class="nb-cell-num">materialized: table</span></div>
+            <div class="nb-code-content"><span class="cm">{{ config(materialized=<span class="str">'table'</span>) }}</span>
+
+<span class="kw">WITH</span> silver_data <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> * <span class="kw">FROM</span> {{ <span class="fn">source</span>(<span class="str">'telecom_main'</span>, <span class="str">'customers_cleaned'</span>) }}
+)
+
+<span class="kw">SELECT</span>
+    Contract,
+    <span class="fn">COUNT</span>(customerID)                          <span class="kw">AS</span> total_customers,
+    <span class="fn">ROUND</span>(<span class="fn">AVG</span>(MonthlyCharges), <span class="num">2</span>)              <span class="kw">AS</span> avg_monthly_charges,
+    <span class="fn">ROUND</span>(<span class="fn">SUM</span>(Churn) * <span class="num">100.0</span> / <span class="fn">COUNT</span>(*), <span class="num">2</span>)  <span class="kw">AS</span> churn_rate_percentage
+<span class="kw">FROM</span> silver_data
+<span class="kw">GROUP BY</span> <span class="num">1</span>
+<span class="kw">ORDER BY</span> churn_rate_percentage <span class="kw">DESC</span></div>
+            <div class="nb-output">
+              <div class="nb-output-bar">Expected output — Churn Rate by Contract Type</div>
+              <div class="nb-table-wrap">
+                <table class="nb-table">
+                  <thead><tr><th>Contract</th><th>total_customers</th><th>avg_monthly_charges</th><th>churn_rate_percentage</th></tr></thead>
+                  <tbody>
+                    <tr><td>Month-to-month</td><td>3875</td><td>65.97</td><td style="color:var(--accent3);">42.71 %</td></tr>
+                    <tr><td>One year</td><td>1473</td><td>65.20</td><td style="color:var(--gold);">11.27 %</td></tr>
+                    <tr><td>Two year</td><td>1695</td><td>60.77</td><td style="color:var(--accent);">2.83 %</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
+        </div>
+      </div><!-- /panel-dbt -->
 
-        </div><!-- /nb-viewer -->
-      </div><!-- /panel-nb -->
-
-      <!-- ─── PANEL: TERRAFORM ─── -->
+      <!-- ─── PANEL: DBT YAML ─── -->
       <div class="file-panel" id="panel-tf">
         <div class="tf-viewer">
           <div class="tf-topbar">
             <div class="tf-info-row">
-              <div class="tf-icon">tf</div>
-              <div><div class="tf-filename">main.tf</div><div class="tf-meta">Terraform · Azure Provider ~3.0 · IaC · Dev environment</div></div>
+              <div class="tf-icon" style="background:linear-gradient(135deg,#ff6b35,#f7c948);color:#000;">yml</div>
+              <div><div class="tf-filename">dbt schema &amp; sources</div><div class="tf-meta">dbt · Data quality tests · Unity Catalog source declaration</div></div>
             </div>
             <div class="tf-block-nav">
-              <button class="tf-block-btn active" onclick="showTfBlock(0)" data-i18n="tf_b0">Provider</button>
-              <button class="tf-block-btn" onclick="showTfBlock(1)" data-i18n="tf_b1">Resource Group</button>
-              <button class="tf-block-btn" onclick="showTfBlock(2)" data-i18n="tf_b2">Storage</button>
-              <button class="tf-block-btn" onclick="showTfBlock(3)" data-i18n="tf_b3">Data Factory</button>
-              <button class="tf-block-btn" onclick="showTfBlock(4)" data-i18n="tf_b4">Permissions</button>
-              <button class="tf-block-btn" onclick="showTfBlock(5)" data-i18n="tf_b5">Linked Service</button>
+              <button class="tf-block-btn active" onclick="showTfBlock(0)">schema.yml</button>
+              <button class="tf-block-btn" onclick="showTfBlock(1)">sources.yml</button>
+              <button class="tf-block-btn" onclick="showTfBlock(2)">dbt_project.yml</button>
             </div>
           </div>
           <div class="tf-layout">
             <div class="tf-code-col">
 
-              <!-- TF block 0 -->
               <div class="tf-block active" id="tf-b0">
-                <div class="tf-block-header"><span class="tf-badge">terraform</span><span class="tf-block-desc">Provider configuration — Azure RM ~3.0</span></div>
-                <div class="tf-code"><span class="tf-cm"># 1. Define provider (Azure)</span>
-<span class="tf-kw">terraform</span> {
-  required_providers {
-    <span class="tf-attr">azurerm</span> = {
-      <span class="tf-attr">source</span>  = <span class="tf-str">"hashicorp/azurerm"</span>
-      <span class="tf-attr">version</span> = <span class="tf-str">"~> 3.0"</span>
-    }
-  }
-}
-
-<span class="tf-kw">provider</span> <span class="tf-str">"azurerm"</span> {
-  features {}
-}</div>
+                <div class="tf-block-header"><span class="tf-badge">tests</span><span class="tf-block-desc">schema.yml — data quality constraints on Gold model</span></div>
+                <div class="tf-code"><span class="tf-attr">version</span>: <span class="tf-num">2</span>
+<span class="tf-kw">models</span>:
+  - <span class="tf-attr">name</span>: <span class="tf-str">avg_churn_by_contract</span>
+    <span class="tf-attr">columns</span>:
+      - <span class="tf-attr">name</span>: <span class="tf-str">Contract</span>
+        <span class="tf-attr">tests</span>:
+          - <span class="tf-str">accepted_values</span>:
+              <span class="tf-attr">values</span>: [<span class="tf-str">'Month-to-month'</span>, <span class="tf-str">'One year'</span>, <span class="tf-str">'Two year'</span>]
+      - <span class="tf-attr">name</span>: <span class="tf-str">churn_rate_percentage</span>
+        <span class="tf-attr">tests</span>:
+          - <span class="tf-bool">not_null</span></div>
               </div>
 
-              <!-- TF block 1 -->
               <div class="tf-block" id="tf-b1">
-                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_resource_group · rg_dev · West Europe</span></div>
-                <div class="tf-code"><span class="tf-cm"># 2. Create Resource Group for DEV</span>
-<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_resource_group"</span> <span class="tf-name">"rg_dev"</span> {
-  <span class="tf-attr">name</span>     = <span class="tf-str">"rg-data-project-dev"</span>
-  <span class="tf-attr">location</span> = <span class="tf-str">"West Europe"</span>
-  <span class="tf-attr">tags</span> = {
-    <span class="tf-attr">environment</span> = <span class="tf-str">"dev"</span>
-    <span class="tf-attr">owner</span>       = <span class="tf-str">"data-project"</span>
-  }
-}</div>
+                <div class="tf-block-header"><span class="tf-badge">source</span><span class="tf-block-desc">sources.yml — Unity Catalog Silver layer declaration</span></div>
+                <div class="tf-code"><span class="tf-attr">version</span>: <span class="tf-num">2</span>
+
+<span class="tf-kw">sources</span>:
+  - <span class="tf-attr">name</span>: <span class="tf-str">telecom_main</span>
+    <span class="tf-attr">database</span>: <span class="tf-str">&lt;catalog&gt;</span>  <span class="tf-cm"># Unity Catalog</span>
+    <span class="tf-attr">schema</span>: <span class="tf-str">silver</span>
+    <span class="tf-attr">tables</span>:
+      - <span class="tf-attr">name</span>: <span class="tf-str">customers_cleaned</span></div>
               </div>
 
-              <!-- TF block 2 -->
               <div class="tf-block" id="tf-b2">
-                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_storage_account + consumption_budget · Data Lake Gen2</span></div>
-                <div class="tf-code"><span class="tf-cm"># 3. Create Storage Account (Data Lake Gen2) for DEV</span>
-<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_storage_account"</span> <span class="tf-name">"sa_dev"</span> {
-  <span class="tf-attr">name</span>                     = <span class="tf-str">"sadataprojectdev001"</span>
-  <span class="tf-attr">resource_group_name</span>      = <span class="tf-ref">azurerm_resource_group.rg_dev.name</span>
-  <span class="tf-attr">location</span>                 = <span class="tf-ref">azurerm_resource_group.rg_dev.location</span>
-  <span class="tf-attr">account_tier</span>             = <span class="tf-str">"Standard"</span>
-  <span class="tf-attr">account_replication_type</span> = <span class="tf-str">"LRS"</span>
-  <span class="tf-attr">is_hns_enabled</span>           = <span class="tf-bool">true</span>  <span class="tf-cm"># Activate Data Lake Gen2</span>
-}
+                <div class="tf-block-header"><span class="tf-badge">project</span><span class="tf-block-desc">dbt_project.yml — project configuration</span></div>
+                <div class="tf-code"><span class="tf-attr">name</span>: <span class="tf-str">'telecom_analytics'</span>
+<span class="tf-attr">version</span>: <span class="tf-str">'1.0.0'</span>
+<span class="tf-attr">profile</span>: <span class="tf-str">'telecom_analytics'</span>
 
-<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_consumption_budget_resource_group"</span> <span class="tf-name">"budget"</span> {
-  <span class="tf-attr">name</span>              = <span class="tf-str">"budget-alerte-dev"</span>
-  <span class="tf-attr">resource_group_id</span> = <span class="tf-ref">azurerm_resource_group.rg_dev.id</span>
-  <span class="tf-attr">amount</span>            = <span class="tf-num">5</span>
-  <span class="tf-attr">time_grain</span>        = <span class="tf-str">"Monthly"</span>
-  time_period {
-    <span class="tf-attr">start_date</span> = <span class="tf-str">"2026-02-01T00:00:00Z"</span>
-    <span class="tf-attr">end_date</span>   = <span class="tf-str">"2026-12-31T23:59:59Z"</span>
-  }
-  notification {
-    <span class="tf-attr">enabled</span>        = <span class="tf-bool">true</span>
-    <span class="tf-attr">threshold</span>      = <span class="tf-num">90.0</span>  <span class="tf-cm"># Alert at 90% of budget (4.50€)</span>
-    <span class="tf-attr">operator</span>       = <span class="tf-str">"EqualTo"</span>
-    <span class="tf-attr">contact_emails</span> = [<span class="tf-str">""</span>]
-  }
-}</div>
-              </div>
+<span class="tf-attr">model-paths</span>:    [<span class="tf-str">"models"</span>]
+<span class="tf-attr">analysis-paths</span>: [<span class="tf-str">"analyses"</span>]
+<span class="tf-attr">test-paths</span>:     [<span class="tf-str">"tests"</span>]
+<span class="tf-attr">seed-paths</span>:     [<span class="tf-str">"seeds"</span>]
+<span class="tf-attr">macro-paths</span>:    [<span class="tf-str">"macros"</span>]
+<span class="tf-attr">snapshot-paths</span>: [<span class="tf-str">"snapshots"</span>]
 
-              <!-- TF block 3 -->
-              <div class="tf-block" id="tf-b3">
-                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_data_factory · adf_dev — SystemAssigned Managed Identity</span></div>
-                <div class="tf-code"><span class="tf-cm"># Azure Data Factory Deployment</span>
-<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_data_factory"</span> <span class="tf-name">"adf_dev"</span> {
-  <span class="tf-attr">name</span>                = <span class="tf-str">"adf-project-data-dev-001"</span>
-  <span class="tf-attr">location</span>            = <span class="tf-ref">azurerm_resource_group.rg_dev.location</span>
-  <span class="tf-attr">resource_group_name</span> = <span class="tf-ref">azurerm_resource_group.rg_dev.name</span>
+<span class="tf-attr">clean-targets</span>:
+  - <span class="tf-str">"target"</span>
+  - <span class="tf-str">"dbt_packages"</span>
 
-  <span class="tf-cm"># Managed Identity — no passwords needed</span>
-  identity {
-    <span class="tf-attr">type</span> = <span class="tf-str">"SystemAssigned"</span>
-  }
-
-  <span class="tf-attr">tags</span> = {
-    <span class="tf-attr">environment</span> = <span class="tf-str">"dev"</span>
-    <span class="tf-attr">managed_by</span>  = <span class="tf-str">"terraform"</span>
-  }
-}
-
-<span class="tf-cm"># Expose ADF name after apply</span>
-<span class="tf-kw">output</span> <span class="tf-str">"data_factory_name"</span> {
-  <span class="tf-attr">value</span> = <span class="tf-ref">azurerm_data_factory.adf_dev.name</span>
-}</div>
-              </div>
-
-              <!-- TF block 4 -->
-              <div class="tf-block" id="tf-b4">
-                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_role_assignment · ADF → Storage Blob Data Contributor</span></div>
-                <div class="tf-code"><span class="tf-cm"># Grant ADF's Managed Identity access to the Data Lake</span>
-<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_role_assignment"</span> <span class="tf-name">"adf_to_storage"</span> {
-  <span class="tf-attr">scope</span>                = <span class="tf-ref">azurerm_storage_account.sa_dev.id</span>
-  <span class="tf-attr">role_definition_name</span> = <span class="tf-str">"Storage Blob Data Contributor"</span>
-  <span class="tf-attr">principal_id</span>         = <span class="tf-ref">azurerm_data_factory.adf_dev.identity[0].principal_id</span>
-}</div>
-              </div>
-
-              <!-- TF block 5 -->
-              <div class="tf-block" id="tf-b5">
-                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_data_factory_linked_service · LS_AzureDataLake_Dev</span></div>
-                <div class="tf-code"><span class="tf-cm"># Linked Service: ADF connects to Data Lake via Managed Identity</span>
-<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_data_factory_linked_service_azure_blob_storage"</span> <span class="tf-name">"ls_storage_dev"</span> {
-  <span class="tf-attr">name</span>            = <span class="tf-str">"LS_AzureDataLake_Dev"</span>
-  <span class="tf-attr">data_factory_id</span> = <span class="tf-ref">azurerm_data_factory.adf_dev.id</span>
-
-  <span class="tf-attr">service_endpoint</span>     = <span class="tf-ref">azurerm_storage_account.sa_dev.primary_blob_endpoint</span>
-  <span class="tf-attr">use_managed_identity</span> = <span class="tf-bool">true</span>
-
-  <span class="tf-attr">depends_on</span> = [<span class="tf-ref">azurerm_role_assignment.adf_to_storage</span>]
-}</div>
+<span class="tf-kw">models</span>:
+  <span class="tf-attr">telecom_analytics</span>:
+    <span class="tf-attr">+materialized</span>: <span class="tf-str">view</span></div>
               </div>
 
             </div><!-- /tf-code-col -->
 
-            <!-- Terraform side panel -->
             <div class="tf-side">
-              <div class="tf-side-label" data-i18n="tf_resources">Resources declared</div>
+              <div class="tf-side-label">dbt test suite</div>
               <div class="tf-res-list">
-                <div class="tf-res-item active" onclick="showTfBlock(0)"><span class="tf-res-dot" style="background:#7b42bc;"></span><div><div class="tf-res-type">terraform</div><div class="tf-res-name">provider config</div></div></div>
-                <div class="tf-res-item" onclick="showTfBlock(1)"><span class="tf-res-dot" style="background:#58a6ff;"></span><div><div class="tf-res-type">resource_group</div><div class="tf-res-name">rg_dev</div></div></div>
-                <div class="tf-res-item" onclick="showTfBlock(2)"><span class="tf-res-dot" style="background:#00d4aa;"></span><div><div class="tf-res-type">storage_account</div><div class="tf-res-name">sa_dev + budget</div></div></div>
-                <div class="tf-res-item" onclick="showTfBlock(3)"><span class="tf-res-dot" style="background:#d29922;"></span><div><div class="tf-res-type">data_factory</div><div class="tf-res-name">adf_dev</div></div></div>
-                <div class="tf-res-item" onclick="showTfBlock(4)"><span class="tf-res-dot" style="background:#f78166;"></span><div><div class="tf-res-type">role_assignment</div><div class="tf-res-name">adf_to_storage</div></div></div>
-                <div class="tf-res-item" onclick="showTfBlock(5)"><span class="tf-res-dot" style="background:#58a6ff;"></span><div><div class="tf-res-type">linked_service</div><div class="tf-res-name">ls_storage_dev</div></div></div>
+                <div class="tf-res-item active" onclick="showTfBlock(0)"><span class="tf-res-dot" style="background:#f78166;"></span><div><div class="tf-res-type">schema.yml</div><div class="tf-res-name">quality tests</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock(1)"><span class="tf-res-dot" style="background:#00d4aa;"></span><div><div class="tf-res-type">sources.yml</div><div class="tf-res-name">Unity Catalog ref</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock(2)"><span class="tf-res-dot" style="background:#58a6ff;"></span><div><div class="tf-res-type">dbt_project.yml</div><div class="tf-res-name">project config</div></div></div>
               </div>
               <div class="tf-plan-box">
-                <div class="tf-plan-label" data-i18n="tf_plan">terraform plan</div>
-                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_resource_group</span></div>
-                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_storage_account</span></div>
-                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">consumption_budget</span></div>
-                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_data_factory</span></div>
-                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_role_assignment</span></div>
-                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">linked_service_blob</span></div>
-                <div class="tf-plan-sum">6 to add, 0 to change, 0 to destroy</div>
+                <div class="tf-plan-label">dbt test results</div>
+                <div class="tf-plan-row"><span class="tf-plus">✓</span><span style="color:var(--muted);font-size:.62rem;">Contract accepted_values</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">✓</span><span style="color:var(--muted);font-size:.62rem;">churn_rate_percentage not_null</span></div>
+                <div class="tf-plan-sum">2 passed, 0 failed</div>
               </div>
             </div>
 
@@ -733,6 +723,14 @@ df_gold.write \
 
   <!-- OTHER PROJECTS -->
   <div class="cards-grid">
+    <div class="card reveal">
+      <div class="card-header">
+        <div><div class="card-title" data-i18n="proj2_title">Azure E2E Automated Pipeline</div><div class="card-subtitle">Personal Project</div></div>
+        <div class="card-date">2025</div>
+      </div>
+      <p class="card-body" data-i18n="proj2_body">Medallion architecture (Bronze/Silver/Gold) on Azure with Terraform IaC, Dockerized Airflow orchestration, Databricks PySpark transformations and Power BI dashboards.</p>
+      <div class="card-tags"><span class="tag tag-green">Azure Data Factory</span><span class="tag tag-blue">Terraform</span><span class="tag tag-orange">PySpark</span><span class="tag tag-gold">Power BI</span></div>
+    </div>
     <div class="card reveal">
       <div class="card-header">
         <div><div class="card-title" data-i18n="aml_title">AML Model Monitoring</div><div class="card-subtitle" data-i18n="aml_sub">Complidata · Internship</div></div>
@@ -789,7 +787,8 @@ df_gold.write \
     <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg1">Cloud &amp; Infra</div><div class="skill-item">Azure (ADF, Databricks, ADLS)</div><div class="skill-item">Terraform (IaC)</div><div class="skill-item">Docker</div><div class="skill-item">Linux</div></div>
     <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg2">Orchestration &amp; Pipelines</div><div class="skill-item">Apache Airflow</div><div class="skill-item">Informatica PowerCenter</div><div class="skill-item">Azure Data Factory</div><div class="skill-item" data-i18n="sk_cicd">CI/CD Deployments</div></div>
     <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg3">Languages</div><div class="skill-item">Python (PySpark, scripts)</div><div class="skill-item">SQL (advanced)</div><div class="skill-item">Java</div></div>
-    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg4">Analytics &amp; Viz</div><div class="skill-item">Power BI</div><div class="skill-item" data-i18n="sk_dw">Data Warehouse design</div><div class="skill-item">Medallion Architecture</div></div>
+    <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg4">Analytics &amp; Viz</div><div class="skill-item">Power BI</div><div class="skill-item" data-i18n="sk_dw">Data Warehouse design</div><div class="skill-item">Medallion Architecture</div>
+    <div class="skill-item">dbt (data build tool)</div></div>
     <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg5">Practices</div><div class="skill-item" data-i18n="sk_etl">ETL Pipeline Design</div><div class="skill-item" data-i18n="sk_dq">Data Quality &amp; Monitoring</div><div class="skill-item" data-i18n="sk_cr">Code Reviews</div><div class="skill-item">Agile / Scrum</div></div>
     <div class="skill-group reveal"><div class="skill-group-title" data-i18n="sg6">Source Control &amp; DevOps</div><div class="skill-item">Git</div><div class="skill-item" data-i18n="sk_ut">Unit Testing</div><div class="skill-item" data-i18n="sk_ba">Budget Alerting</div><div class="skill-item">Managed Identities</div></div>
   </div>
@@ -832,12 +831,11 @@ df_gold.write \
    FILE SWITCHER
 =================================================== */
 function switchFile(id) {
-  document.querySelectorAll('.file-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.file-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.file-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.file-tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('panel-' + id).classList.add('active');
-  var tabs = document.querySelectorAll('.file-tab');
-  if (id === 'nb') tabs[0].classList.add('active');
-  else tabs[1].classList.add('active');
+  var tab = document.querySelector('.file-tab[onclick="switchFile(\'' + id + '\')"]');
+  if (tab) tab.classList.add('active');
 }
 
 /* ===================================================
@@ -877,16 +875,18 @@ var T = {
     about_c3_body:'I integrate Managed Identities, Linked Services, and passwordless architectures by default. No hardcoded credentials, no security shortcuts — especially critical in financial and enterprise contexts.',
     projects_title:'What I <em>build</em>',
     featured_badge:'★ Featured Project',
-    featured_desc:'Designed and implemented a complete Medallion architecture (Bronze / Silver / Gold) with hybrid orchestration and full Infrastructure as Code — automating banking data workflows from raw ingestion to interactive dashboards.',
-    deliv1:'Full environments (Dev/QA/Prod) deployed with Terraform. Automated resource lifecycle and Budget Alerts for cost optimisation.',
-    deliv2_title:'Hybrid Orchestration', deliv2:'Multi-cloud workflows piloted via Dockerized Airflow with Managed Identities for passwordless, secure integration.',
-    deliv3_title:'Automated Ingestion', deliv3:'ADF pipelines with Event-Based Triggers ingest raw CSVs into Bronze in real-time, monitored continuously by Airflow.',
-    deliv4_title:'Spark Transformation', deliv4:'Databricks PySpark Jobs implement Silver/Gold business logic with automated status reporting via Python scripts.',
+    featured_desc:'End-to-end modern data platform on Azure — from Terraform-provisioned infrastructure to dbt-powered Gold analytics, orchestrated by Airflow and governed by Databricks Unity Catalog.',
+    deliv1:'Azure resources and Databricks Workspace deployed with Terraform. Unity Catalog ensures centralised access control, data lineage, and a secretless Managed Identity architecture.',
+    deliv2_title:'Airflow Orchestration', deliv2:'Docker-based Airflow DAG coordinates the full pipeline — triggering Databricks jobs for Bronze/Silver ingestion, then running dbt for Gold transformation.',
+    deliv3_title:'Spark ELT (Bronze &amp; Silver)', deliv3:'PySpark notebooks ingest raw telecom data into Bronze, then type, filter, deduplicate and cast categorical values into the Silver layer.',
+    deliv4_title:'dbt Gold + Quality Tests', deliv4:'dbt models compute Churn Rate KPIs per contract type. Automated schema tests enforce data integrity before exposure to BI tools.',
     nb_tab0:'1 · Connection', nb_tab1:'2 · Transformation', nb_tab2:'3 · Load',
     nb_s1:'Step 1 of 3', nb_s2:'Step 2 of 3', nb_s3:'Step 3 of 3',
     nb_prev:'← Prev', nb_next:'Next →',
     tf_b0:'Provider', tf_b1:'Resource Group', tf_b2:'Storage', tf_b3:'Data Factory', tf_b4:'Permissions', tf_b5:'Linked Service',
     tf_resources:'Resources declared', tf_plan:'terraform plan',
+    proj2_title:'Azure E2E Automated Pipeline',
+    proj2_body:'Medallion architecture on Azure with Terraform IaC, Dockerized Airflow, Databricks PySpark transformations and Power BI dashboards.',
     aml_title:'AML Model Monitoring', aml_sub:'Complidata · Internship',
     aml_body:'Research and implementation of performance drift monitoring for Anti-Money Laundering models. Documented best practices and presented findings to multidisciplinary stakeholders.',
     next_title:'Your Next Project', next_sub:'Open for engagements',
@@ -899,7 +899,7 @@ var T = {
     comp_body:'Maintained and improved AML model performance. Research on model monitoring and performance drift, summarised academic literature, documented best practices. Presented findings to multidisciplinary teams.',
     tag_banking:'Banking · Regulated',
     skills_title:'The full <em>stack</em>',
-    sg1:'Cloud &amp; Infra', sg2:'Orchestration &amp; Pipelines', sg3:'Languages', sg4:'Analytics &amp; Viz', sg5:'Practices', sg6:'Source Control &amp; DevOps',
+    sg1:'Cloud &amp; Infra', sg2:'Orchestration &amp; Pipelines', sg3:'Languages', sg4:'Analytics, Viz &amp; dbt', sg5:'Practices', sg6:'Source Control &amp; DevOps',
     sk_cicd:'CI/CD Deployments', sk_dw:'Data Warehouse design', sk_etl:'ETL Pipeline Design', sk_dq:'Data Quality &amp; Monitoring', sk_cr:'Code Reviews', sk_ut:'Unit Testing', sk_ba:'Budget Alerting',
     contact_title:'Let\'s build something <em style="color:var(--accent);font-style:normal;">reliable</em>',
     contact_desc:"Whether you need a data pipeline built from scratch, an existing ETL modernised, or a full Azure data platform deployed — I'm open to project-based and long-term engagements.",
@@ -924,16 +924,18 @@ var T = {
     about_c3_body:"J'intègre par défaut les Managed Identities, Linked Services et architectures sans mot de passe. Aucune credential codée en dur — essentiel dans les contextes financiers.",
     projects_title:'Ce que je <em>construis</em>',
     featured_badge:'★ Projet phare',
-    featured_desc:"Conception d'une architecture Medallion complète (Bronze / Silver / Gold) avec orchestration hybride et Infrastructure as Code — automatisant les flux bancaires de l'ingestion brute aux dashboards.",
-    deliv1:"Environnements complets (Dev/QA/Prod) déployés avec Terraform. Gestion automatisée des ressources et alertes budgétaires.",
-    deliv2_title:'Orchestration hybride', deliv2:"Workflows multi-cloud via Airflow dockerisé avec Managed Identities pour une intégration sécurisée sans mot de passe.",
-    deliv3_title:'Ingestion automatisée', deliv3:"Pipelines ADF avec déclencheurs événementiels pour ingérer les CSV bruts dans Bronze en temps réel.",
-    deliv4_title:'Transformation Spark', deliv4:"Jobs PySpark Databricks pour la logique métier Silver/Gold, avec reporting automatique via scripts Python.",
+    featured_desc:"Plateforme de données moderne end-to-end sur Azure — de l'infrastructure Terraform aux analytics Gold pilotés par dbt, orchestrés par Airflow et gouvernés par Unity Catalog.",
+    deliv1:"Ressources Azure et Workspace Databricks déployés avec Terraform. Unity Catalog assure le contrôle d'accès centralisé, la traçabilité et une architecture secretless via Managed Identities.",
+    deliv2_title:'Orchestration Airflow', deliv2:"DAG Airflow dockerisé coordonne le pipeline complet — déclenchement des jobs Databricks pour Bronze/Silver, puis exécution de dbt pour la couche Gold.",
+    deliv3_title:'ELT Spark (Bronze &amp; Silver)', deliv3:"Les notebooks PySpark ingèrent les données télécom brutes dans Bronze, puis les typent, filtrent, dédupliquent et castent les valeurs catégorielles dans Silver.",
+    deliv4_title:'dbt Gold + Tests qualité', deliv4:"Les modèles dbt calculent le taux de churn par type de contrat. Des tests automatisés (not_null, accepted_values) garantissent l'intégrité avant exposition aux outils BI.",
     nb_tab0:'1 · Connexion', nb_tab1:'2 · Transformation', nb_tab2:'3 · Chargement',
     nb_s1:'Étape 1 sur 3', nb_s2:'Étape 2 sur 3', nb_s3:'Étape 3 sur 3',
     nb_prev:'← Préc.', nb_next:'Suiv. →',
     tf_b0:'Fournisseur', tf_b1:'Groupe de ressources', tf_b2:'Stockage', tf_b3:'Data Factory', tf_b4:'Permissions', tf_b5:'Service lié',
     tf_resources:'Ressources déclarées', tf_plan:'terraform plan',
+    proj2_title:'Pipeline Azure E2E Automatisé',
+    proj2_body:"Architecture Medallion sur Azure avec IaC Terraform, Airflow dockerisé, transformations PySpark Databricks et dashboards Power BI.",
     aml_title:'Monitoring de modèles AML', aml_sub:'Complidata · Stage',
     aml_body:"Recherche et implémentation du monitoring de dérive pour des modèles anti-blanchiment. Documentation des meilleures pratiques et présentation à des équipes pluridisciplinaires.",
     next_title:'Votre prochain projet', next_sub:'Disponible pour missions',
@@ -946,7 +948,7 @@ var T = {
     comp_body:"Maintenance de modèles AML. Recherche sur la dérive de performance, synthèse académique et présentation à des équipes pluridisciplinaires.",
     tag_banking:'Banque · Réglementé',
     skills_title:'La stack <em>complète</em>',
-    sg1:'Cloud &amp; Infra', sg2:'Orchestration &amp; Pipelines', sg3:'Langages', sg4:'Analytique &amp; Viz', sg5:'Pratiques', sg6:'Versioning &amp; DevOps',
+    sg1:'Cloud &amp; Infra', sg2:'Orchestration &amp; Pipelines', sg3:'Langages', sg4:'Analytique, Viz &amp; dbt', sg5:'Pratiques', sg6:'Versioning &amp; DevOps',
     sk_cicd:'Déploiements CI/CD', sk_dw:'Conception Data Warehouse', sk_etl:'Conception pipelines ETL', sk_dq:'Qualité &amp; Monitoring', sk_cr:'Revues de code', sk_ut:'Tests unitaires', sk_ba:'Alertes budgétaires',
     contact_title:'Construisons quelque chose de <em style="color:var(--accent);font-style:normal;">fiable</em>',
     contact_desc:"Que vous ayez besoin d'un pipeline from scratch, d'un ETL modernisé ou d'une plateforme Azure complète — je suis ouvert aux missions ponctuelles et long terme.",
@@ -971,16 +973,18 @@ var T = {
     about_c3_body:"Ik integreer standaard Managed Identities en wachtwoordloze architecturen. Geen hardgecodeerde credentials — essentieel in financiële contexten.",
     projects_title:'Wat ik <em>bouw</em>',
     featured_badge:'★ Uitgelicht project',
-    featured_desc:"Volledige Medallion-architectuur (Bronze / Silver / Gold) met hybride orkestratie en Infrastructure as Code — voor automatisering van bankgegevensworkflows.",
-    deliv1:"Volledige omgevingen (Dev/QA/Prod) met Terraform. Geautomatiseerd resourcebeheer en budgetwaarschuwingen.",
-    deliv2_title:'Hybride orkestratie', deliv2:"Multi-cloud workflows via gedockeriseerde Airflow met Managed Identities voor veilige integratie.",
-    deliv3_title:'Geautomatiseerde ingestie', deliv3:"ADF-pipelines met gebeurtenistriggers voor real-time ingestie van CSV's in Bronze.",
-    deliv4_title:'Spark-transformatie', deliv4:"PySpark Jobs voor Silver/Gold-bedrijfslogica met geautomatiseerde statusrapportage.",
+    featured_desc:"Modern end-to-end dataplatform op Azure — van Terraform-infrastructuur tot dbt-gestuurde Gold-analytics, gecoördineerd door Airflow en beheerd via Databricks Unity Catalog.",
+    deliv1:"Azure-resources en Databricks Workspace ingezet met Terraform. Unity Catalog centraliseert toegangsbeheer, datalineage en een secretless Managed Identity-architectuur.",
+    deliv2_title:'Airflow-orkestratie', deliv2:"Docker-gebaseerde Airflow DAG coördineert de volledige pipeline — Databricks-jobs voor Bronze/Silver, gevolgd door dbt voor de Gold-laag.",
+    deliv3_title:'Spark ELT (Bronze &amp; Silver)', deliv3:"PySpark notebooks verwerken ruwe telecomdata naar Bronze, typen, filteren en dedupliceren die naar Silver.",
+    deliv4_title:'dbt Gold + kwaliteitstests', deliv4:"dbt-modellen berekenen churnpercentages per contracttype. Geautomatiseerde tests bewaken data-integriteit vóór blootstelling aan BI-tools.",
     nb_tab0:'1 · Verbinding', nb_tab1:'2 · Transformatie', nb_tab2:'3 · Laden',
     nb_s1:'Stap 1 van 3', nb_s2:'Stap 2 van 3', nb_s3:'Stap 3 van 3',
     nb_prev:'← Vorige', nb_next:'Volgende →',
     tf_b0:'Provider', tf_b1:'Resourcegroep', tf_b2:'Opslag', tf_b3:'Data Factory', tf_b4:'Rechten', tf_b5:'Gekoppelde service',
     tf_resources:'Gedeclareerde resources', tf_plan:'terraform plan',
+    proj2_title:'Azure E2E Geautomatiseerde Pipeline',
+    proj2_body:'Medallion-architectuur op Azure met Terraform IaC, gedockeriseerde Airflow, Databricks PySpark-transformaties en Power BI-dashboards.',
     aml_title:'AML-modelmonitoring', aml_sub:'Complidata · Stage',
     aml_body:"Onderzoek naar prestatiedrift van antiwitwasmodellen. Best practices gedocumenteerd en gepresenteerd aan multidisciplinaire teams.",
     next_title:'Uw volgend project', next_sub:'Beschikbaar voor opdrachten',
@@ -993,7 +997,7 @@ var T = {
     comp_body:"Onderhoud van AML-modellen. Onderzoek naar prestatiedrift en presentaties aan multidisciplinaire teams.",
     tag_banking:'Bankieren · Gereguleerd',
     skills_title:'De volledige <em>stack</em>',
-    sg1:'Cloud &amp; Infra', sg2:'Orkestratie &amp; Pipelines', sg3:'Talen', sg4:'Analyse &amp; Visualisatie', sg5:'Praktijken', sg6:'Versiebeheer &amp; DevOps',
+    sg1:'Cloud &amp; Infra', sg2:'Orkestratie &amp; Pipelines', sg3:'Talen', sg4:'Analyse, Visualisatie &amp; dbt', sg5:'Praktijken', sg6:'Versiebeheer &amp; DevOps',
     sk_cicd:'CI/CD-implementaties', sk_dw:'Data Warehouse-ontwerp', sk_etl:'ETL-pipelineontwerp', sk_dq:'Datakwaliteit &amp; monitoring', sk_cr:'Codebeoordelingen', sk_ut:'Unittests', sk_ba:'Budgetwaarschuwingen',
     contact_title:'Laten we iets <em style="color:var(--accent);font-style:normal;">betrouwbaars</em> bouwen',
     contact_desc:"Of u nu een pipeline from scratch nodig heeft of een volledig Azure-platform — ik sta open voor project- en langetermijnopdrachten.",
