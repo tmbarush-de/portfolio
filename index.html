@@ -443,6 +443,10 @@ footer{text-align:center;padding:2rem;font-size:.65rem;color:var(--muted);border
           <span class="ftdot" style="background:linear-gradient(135deg,#7b42bc,#5c4ee8);"></span>
           <span class="ftlabel">dbt schema / sources</span>
         </div>
+        <div class="file-tab" onclick="switchFile('iac')">
+          <span class="ftdot" style="background:linear-gradient(135deg,#5c4ee8,#7b42bc);"></span>
+          <span class="ftlabel">main.tf</span>
+        </div>
       </div>
 
       <!-- ─── PANEL: AIRFLOW ─── -->
@@ -718,6 +722,215 @@ df_silver.write.<span class="fn">format</span>(<span class="str">"delta"</span>)
         </div><!-- /tf-viewer -->
       </div><!-- /panel-tf -->
 
+
+      <!-- ─── PANEL: TERRAFORM (Telecom) ─── -->
+      <div class="file-panel" id="panel-iac">
+        <div class="tf-viewer">
+          <div class="tf-topbar">
+            <div class="tf-info-row">
+              <div class="tf-icon">tf</div>
+              <div><div class="tf-filename">main.tf</div><div class="tf-meta">Terraform · Azure + Databricks providers · IaC · Telecom Platform</div></div>
+            </div>
+            <div class="tf-block-nav">
+              <button class="tf-block-btn active" onclick="showTfBlock2(0)">Providers</button>
+              <button class="tf-block-btn" onclick="showTfBlock2(1)">Resource Group</button>
+              <button class="tf-block-btn" onclick="showTfBlock2(2)">Storage &amp; Medallion</button>
+              <button class="tf-block-btn" onclick="showTfBlock2(3)">Identity &amp; RBAC</button>
+              <button class="tf-block-btn" onclick="showTfBlock2(4)">Databricks</button>
+              <button class="tf-block-btn" onclick="showTfBlock2(5)">Unity Catalog</button>
+            </div>
+          </div>
+          <div class="tf-layout">
+            <div class="tf-code-col">
+
+              <!-- block 0 -->
+              <div class="tf-block active" id="iac-b0">
+                <div class="tf-block-header"><span class="tf-badge">terraform</span><span class="tf-block-desc">Providers — azurerm ~3.0 + databricks 1.30.0</span></div>
+                <div class="tf-code"><span class="tf-cm"># 1. Required providers</span>
+<span class="tf-kw">terraform</span> {
+  required_providers {
+    <span class="tf-attr">azurerm</span> = {
+      <span class="tf-attr">source</span>  = <span class="tf-str">"hashicorp/azurerm"</span>
+      <span class="tf-attr">version</span> = <span class="tf-str">"~> 3.0"</span>
+    }
+    <span class="tf-attr">databricks</span> = {
+      <span class="tf-attr">source</span>  = <span class="tf-str">"databricks/databricks"</span>
+      <span class="tf-attr">version</span> = <span class="tf-str">"1.30.0"</span>
+    }
+  }
+}
+
+<span class="tf-cm"># 2. Provider configuration</span>
+<span class="tf-kw">provider</span> <span class="tf-str">"azurerm"</span> {
+  features {}
+}
+
+<span class="tf-kw">provider</span> <span class="tf-str">"databricks"</span> {
+  <span class="tf-attr">host</span> = <span class="tf-ref">azurerm_databricks_workspace.telecom_workspace.workspace_url</span>
+}</div>
+              </div>
+
+              <!-- block 1 -->
+              <div class="tf-block" id="iac-b1">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_resource_group · rg-telecom-platform-prod · West Europe</span></div>
+                <div class="tf-code"><span class="tf-cm"># Resource Group</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_resource_group"</span> <span class="tf-name">"telecom_rg"</span> {
+  <span class="tf-attr">name</span>     = <span class="tf-str">"rg-telecom-platform-prod"</span>
+  <span class="tf-attr">location</span> = <span class="tf-str">"West Europe"</span>  <span class="tf-cm"># Close to Belgium</span>
+}
+
+<span class="tf-cm"># Generate unique suffix for storage account name</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"random_string"</span> <span class="tf-name">"storage_id"</span> {
+  <span class="tf-attr">length</span>  = <span class="tf-num">6</span>
+  <span class="tf-attr">special</span> = <span class="tf-bool">false</span>
+  <span class="tf-attr">upper</span>   = <span class="tf-bool">false</span>
+}</div>
+              </div>
+
+              <!-- block 2 -->
+              <div class="tf-block" id="iac-b2">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">Storage Gen2 · Container · Bronze / Silver / Gold folders</span></div>
+                <div class="tf-code"><span class="tf-cm"># Data Lake Gen2 storage account</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_storage_account"</span> <span class="tf-name">"datalake"</span> {
+  <span class="tf-attr">name</span>                     = <span class="tf-str">"sttelecom${random_string.storage_id.result}"</span>
+  <span class="tf-attr">resource_group_name</span>      = <span class="tf-ref">azurerm_resource_group.telecom_rg.name</span>
+  <span class="tf-attr">location</span>                 = <span class="tf-ref">azurerm_resource_group.telecom_rg.location</span>
+  <span class="tf-attr">account_tier</span>             = <span class="tf-str">"Standard"</span>
+  <span class="tf-attr">account_replication_type</span> = <span class="tf-str">"LRS"</span>
+  <span class="tf-attr">account_kind</span>             = <span class="tf-str">"StorageV2"</span>
+  <span class="tf-attr">is_hns_enabled</span>           = <span class="tf-bool">true</span>  <span class="tf-cm"># Activate Data Lake Gen2</span>
+}
+
+<span class="tf-cm"># Private container</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_storage_container"</span> <span class="tf-name">"data_container"</span> {
+  <span class="tf-attr">name</span>                  = <span class="tf-str">"telecom-data"</span>
+  <span class="tf-attr">storage_account_name</span>  = <span class="tf-ref">azurerm_storage_account.datalake.name</span>
+  <span class="tf-attr">container_access_type</span> = <span class="tf-str">"private"</span>
+}
+
+<span class="tf-cm"># Medallion architecture folders</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_storage_data_lake_gen2_path"</span> <span class="tf-name">"folder_bronze"</span> {
+  <span class="tf-attr">path</span>               = <span class="tf-str">"bronze"</span>
+  <span class="tf-attr">filesystem_name</span>    = <span class="tf-ref">azurerm_storage_container.data_container.name</span>
+  <span class="tf-attr">storage_account_id</span> = <span class="tf-ref">azurerm_storage_account.datalake.id</span>
+  <span class="tf-attr">resource</span>           = <span class="tf-str">"directory"</span>
+}
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_storage_data_lake_gen2_path"</span> <span class="tf-name">"folder_silver"</span> {
+  <span class="tf-attr">path</span>               = <span class="tf-str">"silver"</span>
+  <span class="tf-attr">filesystem_name</span>    = <span class="tf-ref">azurerm_storage_container.data_container.name</span>
+  <span class="tf-attr">storage_account_id</span> = <span class="tf-ref">azurerm_storage_account.datalake.id</span>
+  <span class="tf-attr">resource</span>           = <span class="tf-str">"directory"</span>
+}
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_storage_data_lake_gen2_path"</span> <span class="tf-name">"folder_gold"</span> {
+  <span class="tf-attr">path</span>               = <span class="tf-str">"gold"</span>
+  <span class="tf-attr">filesystem_name</span>    = <span class="tf-ref">azurerm_storage_container.data_container.name</span>
+  <span class="tf-attr">storage_account_id</span> = <span class="tf-ref">azurerm_storage_account.datalake.id</span>
+  <span class="tf-attr">resource</span>           = <span class="tf-str">"directory"</span>
+}</div>
+              </div>
+
+              <!-- block 3 -->
+              <div class="tf-block" id="iac-b3">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">Managed Identity · RBAC · Storage Blob Data Contributor</span></div>
+                <div class="tf-code"><span class="tf-cm"># User-assigned managed identity for the platform</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_user_assigned_identity"</span> <span class="tf-name">"platform_identity"</span> {
+  <span class="tf-attr">name</span>                = <span class="tf-str">"id-telecom-platform"</span>
+  <span class="tf-attr">location</span>            = <span class="tf-ref">azurerm_resource_group.telecom_rg.location</span>
+  <span class="tf-attr">resource_group_name</span> = <span class="tf-ref">azurerm_resource_group.telecom_rg.name</span>
+}
+
+<span class="tf-cm"># Databricks Access Connector (SystemAssigned identity)</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_databricks_access_connector"</span> <span class="tf-name">"unity_catalog"</span> {
+  <span class="tf-attr">name</span>                = <span class="tf-str">"ext-access-connector"</span>
+  <span class="tf-attr">resource_group_name</span> = <span class="tf-ref">azurerm_resource_group.telecom_rg.name</span>
+  <span class="tf-attr">location</span>            = <span class="tf-ref">azurerm_resource_group.telecom_rg.location</span>
+  identity { <span class="tf-attr">type</span> = <span class="tf-str">"SystemAssigned"</span> }
+}
+
+<span class="tf-cm"># Grant connector access to Data Lake</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_role_assignment"</span> <span class="tf-name">"datalake_access"</span> {
+  <span class="tf-attr">scope</span>                = <span class="tf-ref">azurerm_storage_account.datalake.id</span>
+  <span class="tf-attr">role_definition_name</span> = <span class="tf-str">"Storage Blob Data Contributor"</span>
+  <span class="tf-attr">principal_id</span>         = <span class="tf-ref">azurerm_databricks_access_connector.unity_catalog.identity[0].principal_id</span>
+}
+
+<span class="tf-cm"># Grant Managed Identity Operator to connector</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_role_assignment"</span> <span class="tf-name">"connector_operator"</span> {
+  <span class="tf-attr">scope</span>                = <span class="tf-ref">azurerm_user_assigned_identity.platform_identity.id</span>
+  <span class="tf-attr">role_definition_name</span> = <span class="tf-str">"Managed Identity Operator"</span>
+  <span class="tf-attr">principal_id</span>         = <span class="tf-ref">azurerm_databricks_access_connector.unity_catalog.identity[0].principal_id</span>
+}</div>
+              </div>
+
+              <!-- block 4 -->
+              <div class="tf-block" id="iac-b4">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">azurerm_databricks_workspace · Premium SKU · Prod</span></div>
+                <div class="tf-code"><span class="tf-cm"># Databricks Workspace — Premium tier for Unity Catalog</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"azurerm_databricks_workspace"</span> <span class="tf-name">"telecom_workspace"</span> {
+  <span class="tf-attr">name</span>                = <span class="tf-str">"dbw-telecom-platform"</span>
+  <span class="tf-attr">resource_group_name</span> = <span class="tf-ref">azurerm_resource_group.telecom_rg.name</span>
+  <span class="tf-attr">location</span>            = <span class="tf-ref">azurerm_resource_group.telecom_rg.location</span>
+  <span class="tf-attr">sku</span>                 = <span class="tf-str">"premium"</span>
+
+  <span class="tf-attr">tags</span> = {
+    <span class="tf-attr">Environment</span> = <span class="tf-str">"Prod"</span>
+    <span class="tf-attr">Project</span>     = <span class="tf-str">"Telecom-Platform"</span>
+  }
+}</div>
+              </div>
+
+              <!-- block 5 -->
+              <div class="tf-block" id="iac-b5">
+                <div class="tf-block-header"><span class="tf-badge">resource</span><span class="tf-block-desc">databricks_storage_credential + external_location · Unity Catalog</span></div>
+                <div class="tf-code"><span class="tf-cm"># Storage credential via Managed Identity</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"databricks_storage_credential"</span> <span class="tf-name">"external_creds"</span> {
+  <span class="tf-attr">name</span> = <span class="tf-str">"cred-telecom-platform"</span>
+  azure_managed_identity {
+    <span class="tf-attr">access_connector_id</span> = <span class="tf-ref">azurerm_databricks_access_connector.unity_catalog.id</span>
+  }
+  <span class="tf-attr">comment</span>    = <span class="tf-str">"Credential for Telecom project — managed by Terraform"</span>
+  <span class="tf-attr">depends_on</span> = [<span class="tf-ref">azurerm_role_assignment.connector_operator</span>]
+}
+
+<span class="tf-cm"># External location pointing to ADLS container</span>
+<span class="tf-kw">resource</span> <span class="tf-str">"databricks_external_location"</span> <span class="tf-name">"telecom_location"</span> {
+  <span class="tf-attr">name</span>            = <span class="tf-str">"telecom-external-location"</span>
+  <span class="tf-attr">url</span>             = <span class="tf-str">"abfss://telecom-data@&lt;storage_account&gt;.dfs.core.windows.net/"</span>
+  <span class="tf-attr">credential_name</span> = <span class="tf-ref">databricks_storage_credential.external_creds.id</span>
+  <span class="tf-attr">comment</span>         = <span class="tf-str">"External location for telecom data"</span>
+  <span class="tf-attr">depends_on</span>      = [<span class="tf-ref">databricks_storage_credential.external_creds</span>]
+}</div>
+              </div>
+
+            </div><!-- /tf-code-col -->
+
+            <div class="tf-side">
+              <div class="tf-side-label">Resources declared</div>
+              <div class="tf-res-list">
+                <div class="tf-res-item active" onclick="showTfBlock2(0)"><span class="tf-res-dot" style="background:#7b42bc;"></span><div><div class="tf-res-type">terraform</div><div class="tf-res-name">providers config</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock2(1)"><span class="tf-res-dot" style="background:#58a6ff;"></span><div><div class="tf-res-type">resource_group</div><div class="tf-res-name">telecom_rg</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock2(2)"><span class="tf-res-dot" style="background:#00d4aa;"></span><div><div class="tf-res-type">storage + medallion</div><div class="tf-res-name">datalake + folders</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock2(3)"><span class="tf-res-dot" style="background:#f78166;"></span><div><div class="tf-res-type">identity + RBAC</div><div class="tf-res-name">managed identities</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock2(4)"><span class="tf-res-dot" style="background:#d29922;"></span><div><div class="tf-res-type">databricks_workspace</div><div class="tf-res-name">telecom_workspace</div></div></div>
+                <div class="tf-res-item" onclick="showTfBlock2(5)"><span class="tf-res-dot" style="background:#5c4ee8;"></span><div><div class="tf-res-type">unity_catalog</div><div class="tf-res-name">credentials + location</div></div></div>
+              </div>
+              <div class="tf-plan-box">
+                <div class="tf-plan-label">terraform plan</div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_resource_group</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">azurerm_storage_account</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">storage_container + 3 paths</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">user_assigned_identity</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">databricks_access_connector</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">2× role_assignment</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">databricks_workspace</span></div>
+                <div class="tf-plan-row"><span class="tf-plus">+</span><span style="color:var(--muted);font-size:.62rem;">storage_credential + ext_location</span></div>
+                <div class="tf-plan-sum">10 to add, 0 to change, 0 to destroy</div>
+              </div>
+            </div>
+
+          </div><!-- /tf-layout -->
+        </div><!-- /tf-viewer -->
+      </div><!-- /panel-iac -->
     </div><!-- /code-viewers -->
   </div><!-- /featured-card -->
 
@@ -1095,6 +1308,22 @@ setLang = function(lang) {
   setTimeout(function(){ updateFormPlaceholders(lang); }, 160);
 };
 updateFormPlaceholders('en');
+
+/* ===================================================
+   TERRAFORM TELECOM BLOCKS
+=================================================== */
+function showTfBlock2(idx) {
+  var blocks = ['iac-b0','iac-b1','iac-b2','iac-b3','iac-b4','iac-b5'];
+  blocks.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('active', i === idx);
+  });
+  var panel = document.getElementById('panel-iac');
+  if (!panel) return;
+  panel.querySelectorAll('.tf-block-btn').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+  panel.querySelectorAll('.tf-res-item').forEach(function(r, i) { r.classList.toggle('active', i === idx); });
+}
+
 </script>
 </body>
 </html>
